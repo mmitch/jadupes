@@ -43,4 +43,4 @@ hardlink duplicate files to each other to consume disk space.
 #TODO
 -----
 
-* fresd project: todo ALL the things!
+* fresh project: todo ALL the things!
