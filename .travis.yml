@@ -1,5 +1,8 @@
 language: java
 
+jdk:
+  - oraclejdk8
+
 # Gradle specific cache handling
 # see https://docs.travis-ci.com/user/languages/java/#caching
 before_cache:
