@@ -4,8 +4,12 @@
  */
 package de.cgarbs.jadupes;
 
-import java.util.Collections;
+import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Scans directories for relevant files
@@ -21,10 +25,16 @@ public class FileScanner
 	 * @param dir
 	 *            the directory to scan
 	 * @return the found files
+	 * @throws IOException
+	 *             any IO error
 	 */
-	public List<ScannedFile> scan(String dir)
+	public List<ScannedFile> scan(String dir) throws IOException
 	{
-		return Collections.emptyList();
+		Path startPath = FileSystems.getDefault().getPath(dir);
+		return Files.walk(startPath, 1) //
+				.filter(Files::isRegularFile) //
+				.map(file -> new ScannedFile(file.getFileName(), file.getParent())) //
+				.collect(Collectors.toList());
 	}
 
 }
