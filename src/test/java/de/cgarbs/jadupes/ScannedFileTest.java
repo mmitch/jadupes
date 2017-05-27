@@ -32,6 +32,13 @@ public class ScannedFileTest
 	}
 
 	@Test
+	public void scannedFileDoesNotMatchCompletelyDifferentObject()
+	{
+		ScannedFile sut = createUnspecifiedScannedFile();
+		assertThat(sut.equals("somePlainString"), is(false));
+	}
+
+	@Test
 	public void scannedFileMatchesSameScannedFile()
 	{
 		// given
