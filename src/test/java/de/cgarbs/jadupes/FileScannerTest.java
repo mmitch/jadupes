@@ -5,6 +5,7 @@
 package de.cgarbs.jadupes;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.collection.IsArrayContainingInAnyOrder.arrayContainingInAnyOrder;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.junit.Assert.assertThat;
@@ -58,9 +59,7 @@ public class FileScannerTest
 
 		// then
 		assertThat(result, hasSize(1));
-		ScannedFile scannedFile = result.get(0);
-		assertThat(scannedFile.getName(), is(file1.getFileName()));
-		assertThat(scannedFile.getDirectory(), is(file1.getParent()));
+		assertThat(result.get(0).equals(file1), is(true));
 	}
 
 	@Test
@@ -75,9 +74,7 @@ public class FileScannerTest
 
 		// then
 		assertThat(result, hasSize(1));
-		ScannedFile scannedFile = result.get(0);
-		assertThat(scannedFile.getName(), is(file1.getFileName()));
-		assertThat(scannedFile.getDirectory(), is(subDir));
+		assertThat(result.get(0).equals(file1), is(true));
 	}
 
 	@Test
@@ -93,9 +90,22 @@ public class FileScannerTest
 
 		// then
 		assertThat(result, hasSize(1));
-		ScannedFile scannedFile = result.get(0);
-		assertThat(scannedFile.getName(), is(file1.getFileName()));
-		assertThat(scannedFile.getDirectory(), is(subSubDir));
+		assertThat(result.get(0).equals(file1), is(true));
+	}
+
+	@Test
+	public void scanFindsMultipleFiles() throws IOException
+	{
+		// given
+		Path file1 = createFileWithContent(tempDir, "file1", "FOO");
+		Path file2 = createFileWithContent(tempDir, "file2", "FOO");
+		Path file3 = createFileWithContent(tempDir, "file3", "FOO");
+
+		// when
+		List<ScannedFile> result = sut.scan(tempDir.toString());
+
+		// then
+		assertThat(result.toArray(), arrayContainingInAnyOrder(file1, file2, file3));
 	}
 
 	private Path createSubdirectory(Path dir, String subdir) throws IOException
