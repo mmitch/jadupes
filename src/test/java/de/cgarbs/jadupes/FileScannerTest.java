@@ -67,7 +67,7 @@ public class FileScannerTest
 	public void scanFindsFileInSubdirectory() throws IOException
 	{
 		// given
-		Path subDir = createSubdirectory("subdir");
+		Path subDir = createSubdirectory(tempDir, "subdir");
 		Path file1 = createFileWithContent(subDir, "file1", "FOO");
 
 		// when
@@ -80,9 +80,27 @@ public class FileScannerTest
 		assertThat(scannedFile.getDirectory(), is(subDir));
 	}
 
-	private Path createSubdirectory(String subdir) throws IOException
+	@Test
+	public void scanFindsFileInDeeperSubdirectory() throws IOException
 	{
-		return Files.createDirectories(tempDir.resolve(subdir));
+		// given
+		Path subDir = createSubdirectory(tempDir, "subdirA");
+		Path subSubDir = createSubdirectory(subDir, "subdirB");
+		Path file1 = createFileWithContent(subSubDir, "file1", "FOO");
+
+		// when
+		List<ScannedFile> result = sut.scan(tempDir.toString());
+
+		// then
+		assertThat(result, hasSize(1));
+		ScannedFile scannedFile = result.get(0);
+		assertThat(scannedFile.getName(), is(file1.getFileName()));
+		assertThat(scannedFile.getDirectory(), is(subSubDir));
+	}
+
+	private Path createSubdirectory(Path dir, String subdir) throws IOException
+	{
+		return Files.createDirectories(dir.resolve(subdir));
 	}
 
 	private Path createFileWithContent(Path directory, String filename, String content) throws IOException
