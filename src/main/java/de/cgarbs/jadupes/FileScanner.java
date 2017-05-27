@@ -33,7 +33,7 @@ public class FileScanner
 		Path startPath = FileSystems.getDefault().getPath(dir);
 		return Files.walk(startPath) //
 				.filter(Files::isRegularFile) //
-				.map(file -> new ScannedFile(file.getFileName(), file.getParent())) //
+				.map(ScannedFile::new) //
 				.collect(Collectors.toList());
 	}
 

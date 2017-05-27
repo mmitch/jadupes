@@ -50,12 +50,8 @@ public class ScannedFileTest
 	public void scannedFileDoesNotMatchDifferentScannedFile()
 	{
 		// given
-		ScannedFile scannedFile1 = new ScannedFile( //
-				Paths.get("name1"), //
-				Paths.get("dir1"));
-		ScannedFile scannedFile2 = new ScannedFile( //
-				Paths.get("name2"), //
-				Paths.get("dir2"));
+		ScannedFile scannedFile1 = new ScannedFile(Paths.get("dir1", "name1"));
+		ScannedFile scannedFile2 = new ScannedFile(Paths.get("dir2", "name2"));
 
 		// when
 		boolean result = scannedFile1.equals(scannedFile2);
@@ -69,11 +65,9 @@ public class ScannedFileTest
 	public void scannedFileMatchesSamePath()
 	{
 		// given
-		Path someDirectory = Paths.get("dir", "subdir");
-		Path someName = Paths.get("filename");
 		Path someFile = Paths.get("dir", "subdir", "filename");
 
-		ScannedFile sut = new ScannedFile(someName, someDirectory);
+		ScannedFile sut = new ScannedFile(someFile);
 
 		// when
 		boolean result = sut.equals(someFile);
@@ -87,11 +81,10 @@ public class ScannedFileTest
 	public void scannedFileDoesNotMatchDifferentPath()
 	{
 		// given
-		Path someDirectory = Paths.get("dir", "subdir");
-		Path someName = Paths.get("filename");
+		Path someFile = Paths.get("dir", "subdir", "filename");
 		Path otherFile = Paths.get("dir", "subdir", "different");
 
-		ScannedFile sut = new ScannedFile(someName, someDirectory);
+		ScannedFile sut = new ScannedFile(someFile);
 
 		// when
 		boolean result = sut.equals(otherFile);
@@ -103,9 +96,7 @@ public class ScannedFileTest
 
 	private ScannedFile createUnspecifiedScannedFile()
 	{
-		return new ScannedFile( //
-				Paths.get("anyFilename"), //
-				Paths.get("anyDirectory"));
+		return new ScannedFile(Paths.get("anyDirectory", "anyFilename"));
 	}
 
 }

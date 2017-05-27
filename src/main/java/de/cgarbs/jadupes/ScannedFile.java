@@ -14,37 +14,25 @@ import java.nio.file.Path;
  */
 public class ScannedFile
 {
-	private final Path name;
-	private final Path directory;
+	private Path file;
 
 	/**
-	 * creates a new file
+	 * creates a new scanned file
 	 * 
-	 * @param name
-	 *            the name of the file
-	 * @param directory
-	 *            the directory the file is in
+	 * @param file
+	 *            the Path of the file (directory + filename)
 	 */
-	public ScannedFile(Path name, Path directory)
+	public ScannedFile(Path file)
 	{
-		this.name = name;
-		this.directory = directory;
+		this.file = file;
 	}
 
 	/**
-	 * @return the name of the file
+	 * @return the Path of this file (directory + filename)
 	 */
-	public Path getName()
+	public Path getFile()
 	{
-		return name;
-	}
-
-	/**
-	 * @return the directory the file is in
-	 */
-	public Path getDirectory()
-	{
-		return directory;
+		return file;
 	}
 
 	@Override
@@ -58,15 +46,14 @@ public class ScannedFile
 		{
 			return true;
 		}
-		Path myPath = directory.resolve(name.toString());
 		if (obj instanceof Path)
 		{
-			return myPath.equals(obj);
+			return file.equals(obj);
 		}
 		if (obj instanceof ScannedFile)
 		{
 			ScannedFile other = (ScannedFile) obj;
-			return myPath.equals(other.getDirectory().resolve(other.getName().toString()));
+			return file.equals(other.file);
 		}
 		return false;
 	}
