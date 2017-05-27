@@ -18,6 +18,21 @@ import org.junit.Test;
 public class ScannedFileTest
 {
 	@Test
+	public void givenPathIsReturned()
+	{
+		// given
+		Path somePath = Paths.get("somedir", "somefile");
+
+		ScannedFile scannedFile = new ScannedFile(somePath);
+
+		// when
+		Path result = scannedFile.getFile();
+
+		// then
+		assertThat(result, is(somePath));
+	}
+
+	@Test
 	public void scannedFileDoesNotMatchNull()
 	{
 		ScannedFile scannedFile = createUnspecifiedScannedFile();
@@ -34,8 +49,8 @@ public class ScannedFileTest
 	@Test
 	public void scannedFileDoesNotMatchCompletelyDifferentObject()
 	{
-		ScannedFile sut = createUnspecifiedScannedFile();
-		assertThat(sut.equals("somePlainString"), is(false));
+		ScannedFile scannedFile = createUnspecifiedScannedFile();
+		assertThat(scannedFile.equals("somePlainString"), is(false));
 	}
 
 	@Test
