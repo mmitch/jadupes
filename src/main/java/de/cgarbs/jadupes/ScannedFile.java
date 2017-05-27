@@ -46,4 +46,28 @@ public class ScannedFile
 	{
 		return directory;
 	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (obj == null)
+		{
+			return false;
+		}
+		if (obj == this)
+		{
+			return true;
+		}
+		Path myPath = directory.resolve(name.toString());
+		if (obj instanceof Path)
+		{
+			return myPath.equals(obj);
+		}
+		if (obj instanceof ScannedFile)
+		{
+			ScannedFile other = (ScannedFile) obj;
+			return myPath.equals(other.getDirectory().resolve(other.getName().toString()));
+		}
+		return false;
+	}
 }
