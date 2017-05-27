@@ -10,9 +10,7 @@ import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.junit.Assert.assertThat;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -29,22 +27,21 @@ public class FileScannerTest
 	public TemporaryFolder tempFolder = new TemporaryFolder();
 
 	private final FileScanner sut = new FileScanner();
-	private File tempDir;
+	private Path tempDir;
 
 	@Before
 	public void setup()
 	{
-		tempDir = tempFolder.getRoot();
+		tempDir = tempFolder.getRoot().toPath();
 	}
 
 	@Test
 	public void scanFindsNoFilesInEmptyDirectory() throws IOException
 	{
 		// given
-		String emptyDirectory = tempDir.getAbsolutePath();
 
 		// when
-		List<ScannedFile> result = sut.scan(emptyDirectory);
+		List<ScannedFile> result = sut.scan(tempDir.toString());
 
 		// then
 		assertThat(result, empty());
@@ -54,25 +51,47 @@ public class FileScannerTest
 	public void scanFindsSingleRegularFile() throws IOException
 	{
 		// given
-		createFileWithContent(tempDir, "file1", "FOO");
-		String directory = tempFolder.getRoot().getAbsolutePath();
+		Path file1 = createFileWithContent(tempDir, "file1", "FOO");
 
 		// when
-		List<ScannedFile> result = sut.scan(directory);
+		List<ScannedFile> result = sut.scan(tempDir.toString());
 
 		// then
 		assertThat(result, hasSize(1));
 		ScannedFile scannedFile = result.get(0);
-		assertThat(scannedFile.getName().toString(), is("file1"));
-		assertThat(scannedFile.getDirectory().toString(), is(directory));
+		assertThat(scannedFile.getName(), is(file1.getFileName()));
+		assertThat(scannedFile.getDirectory(), is(file1.getParent()));
 	}
 
-	private void createFileWithContent(File dir, String name, String content) throws IOException
+	@Test
+	public void scanFindsFileInSubdirectory() throws IOException
 	{
-		Path path = FileSystems.getDefault().getPath(dir.getAbsolutePath(), name);
-		BufferedWriter writer = Files.newBufferedWriter(path);
+		// given
+		Path subDir = createSubdirectory("subdir");
+		Path file1 = createFileWithContent(subDir, "file1", "FOO");
+
+		// when
+		List<ScannedFile> result = sut.scan(tempDir.toString());
+
+		// then
+		assertThat(result, hasSize(1));
+		ScannedFile scannedFile = result.get(0);
+		assertThat(scannedFile.getName(), is(file1.getFileName()));
+		assertThat(scannedFile.getDirectory(), is(subDir));
+	}
+
+	private Path createSubdirectory(String subdir) throws IOException
+	{
+		return Files.createDirectories(tempDir.resolve(subdir));
+	}
+
+	private Path createFileWithContent(Path directory, String filename, String content) throws IOException
+	{
+		Path file = directory.resolve(filename);
+		BufferedWriter writer = Files.newBufferedWriter(file);
 		writer.write(content);
 		writer.close();
+		return file;
 	}
 
 	// TODO: don't follow symlinks

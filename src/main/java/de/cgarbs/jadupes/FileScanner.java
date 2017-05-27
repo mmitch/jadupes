@@ -31,7 +31,7 @@ public class FileScanner
 	public List<ScannedFile> scan(String dir) throws IOException
 	{
 		Path startPath = FileSystems.getDefault().getPath(dir);
-		return Files.walk(startPath, 1) //
+		return Files.walk(startPath) //
 				.filter(Files::isRegularFile) //
 				.map(file -> new ScannedFile(file.getFileName(), file.getParent())) //
 				.collect(Collectors.toList());
