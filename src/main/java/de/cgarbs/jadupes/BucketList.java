@@ -25,11 +25,9 @@ public class BucketList<T>
 {
 	private final Collection<List<T>> buckets;
 
-	private <R> BucketList(List<T> elements, Function<T, R> classifier)
+	private BucketList(Collection<List<T>> buckets)
 	{
-		buckets = elements.stream() //
-				.collect(Collectors.groupingBy(classifier)) //
-				.values();
+		this.buckets = buckets;
 	}
 
 	/**
@@ -43,7 +41,8 @@ public class BucketList<T>
 	 */
 	public static <T, R> BucketList<T> create(List<T> elements, Function<T, R> classifier)
 	{
-		return new BucketList<T>(elements, classifier);
+
+		return new BucketList<T>(partition(elements, classifier));
 	}
 
 	/**
@@ -54,4 +53,27 @@ public class BucketList<T>
 		return buckets;
 	}
 
+	/**
+	 * Creates a new bucket list in which each existing bucket is split into
+	 * further sub-buckets.
+	 * Elements of different buckets are not mixed in the new sub-buckets.
+	 * 
+	 * @param classifier
+	 *            extracts the new sub-bucket identifier for every element
+	 * @return a new bucket list
+	 */
+	public <R> BucketList<T> refine(Function<T, R> classifier)
+	{
+		return new BucketList<T>( //
+				buckets.stream() //
+						.flatMap(bucket -> partition(bucket, classifier).stream()) //
+						.collect(Collectors.toList()));
+	}
+
+	private static <T, R> Collection<List<T>> partition(List<T> elements, Function<T, R> classifier)
+	{
+		return elements.stream() //
+				.collect(Collectors.groupingBy(classifier)) //
+				.values();
+	}
 }

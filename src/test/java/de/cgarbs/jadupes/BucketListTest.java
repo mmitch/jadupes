@@ -66,4 +66,34 @@ public class BucketListTest
 						Arrays.asList("tree") //
 				));
 	}
+
+	@Test
+	public void refineBucketListBySecondCriteria()
+	{
+		// given
+		List<Integer> elements = Arrays.asList(1, 2, 13, 17, 20, 25);
+		BucketList<Integer> groupedByDigitCount = BucketList.create(elements, this::getDigits);
+
+		// when
+		BucketList<Integer> result = groupedByDigitCount.refine(this::evenOdd);
+
+		// then
+		assertThat(result.getBuckets().toArray(), //
+				arrayContainingInAnyOrder( //
+						Arrays.asList(1), //
+						Arrays.asList(2), //
+						Arrays.asList(13, 17, 25), //
+						Arrays.asList(20) //
+				));
+	}
+
+	private int getDigits(Integer i)
+	{
+		return i.toString().length();
+	}
+
+	private boolean evenOdd(Integer i)
+	{
+		return i % 2 == 0;
+	}
 }
