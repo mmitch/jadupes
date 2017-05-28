@@ -4,57 +4,84 @@
  */
 package de.cgarbs.jadupes;
 
+import static de.cgarbs.jadupes.test.FileHelper.createFileWithContent;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertThat;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 @SuppressWarnings("javadoc")
 public class ScannedFileTest
 {
-	@Test
-	public void givenPathIsReturned()
+	@Rule
+	public TemporaryFolder tempFolder = new TemporaryFolder();
+
+	private Path tempDir;
+
+	@Before
+	public void setup()
 	{
-		// given
-		Path somePath = Paths.get("somedir", "somefile");
-
-		ScannedFile scannedFile = new ScannedFile(somePath);
-
-		// when
-		Path result = scannedFile.getFile();
-
-		// then
-		assertThat(result, is(somePath));
+		tempDir = tempFolder.getRoot().toPath();
 	}
 
 	@Test
-	public void scannedFileDoesNotMatchNull()
+	public void givenPathIsReturned() throws IOException
+	{
+		// given
+		Path somePath = createFileWithContent(tempDir, "filename", "FOO");
+
+		// when
+		ScannedFile scannedFile = new ScannedFile(somePath);
+
+		// then
+		assertThat(scannedFile.getFile(), is(somePath));
+	}
+
+	@Test
+	public void filesizeIsReturned() throws IOException
+	{
+		// given
+		Path file = createFileWithContent(tempDir, "file", "some content");
+
+		// when
+		ScannedFile scannedFile = new ScannedFile(file);
+
+		// then
+		assertThat(scannedFile.getSize(), is(Files.size(file)));
+	}
+
+	@Test
+	public void scannedFileDoesNotMatchNull() throws IOException
 	{
 		ScannedFile scannedFile = createUnspecifiedScannedFile();
 		assertThat(scannedFile.equals(null), is(false));
 	}
 
 	@Test
-	public void scannedFileMatchesItself()
+	public void scannedFileMatchesItself() throws IOException
 	{
 		ScannedFile scannedFile = createUnspecifiedScannedFile();
 		assertThat(scannedFile.equals(scannedFile), is(true));
 	}
 
 	@Test
-	public void scannedFileDoesNotMatchCompletelyDifferentObject()
+	public void scannedFileDoesNotMatchCompletelyDifferentObject() throws IOException
 	{
 		ScannedFile scannedFile = createUnspecifiedScannedFile();
 		assertThat(scannedFile.equals("somePlainString"), is(false));
 	}
 
 	@Test
-	public void scannedFileMatchesSameScannedFile()
+	public void scannedFileMatchesSameScannedFile() throws IOException
 	{
 		// given
 		ScannedFile scannedFile1 = createUnspecifiedScannedFile();
@@ -69,11 +96,11 @@ public class ScannedFileTest
 	}
 
 	@Test
-	public void scannedFileDoesNotMatchDifferentScannedFile()
+	public void scannedFileDoesNotMatchDifferentScannedFile() throws IOException
 	{
 		// given
-		ScannedFile scannedFile1 = new ScannedFile(Paths.get("dir1", "name1"));
-		ScannedFile scannedFile2 = new ScannedFile(Paths.get("dir2", "name2"));
+		ScannedFile scannedFile1 = new ScannedFile(createFileWithContent(tempDir, "name1", "FOO"));
+		ScannedFile scannedFile2 = new ScannedFile(createFileWithContent(tempDir, "name2", "BAR"));
 
 		// when
 		boolean result = scannedFile1.equals(scannedFile2);
@@ -84,10 +111,10 @@ public class ScannedFileTest
 	}
 
 	@Test
-	public void scannedFileMatchesSamePath()
+	public void scannedFileMatchesSamePath() throws IOException
 	{
 		// given
-		Path someFile = Paths.get("dir", "subdir", "filename");
+		Path someFile = createFileWithContent(tempDir, "filename", "FOO");
 
 		ScannedFile sut = new ScannedFile(someFile);
 
@@ -100,11 +127,11 @@ public class ScannedFileTest
 	}
 
 	@Test
-	public void scannedFileDoesNotMatchDifferentPath()
+	public void scannedFileDoesNotMatchDifferentPath() throws IOException
 	{
 		// given
-		Path someFile = Paths.get("dir", "subdir", "filename");
-		Path otherFile = Paths.get("dir", "subdir", "different");
+		Path someFile = createFileWithContent(tempDir, "filename", "FOO");
+		Path otherFile = createFileWithContent(tempDir, "othername", "BAR");
 
 		ScannedFile sut = new ScannedFile(someFile);
 
@@ -116,9 +143,9 @@ public class ScannedFileTest
 
 	}
 
-	private ScannedFile createUnspecifiedScannedFile()
+	private ScannedFile createUnspecifiedScannedFile() throws IOException
 	{
-		return new ScannedFile(Paths.get("anyDirectory", "anyFilename"));
+		return new ScannedFile(createFileWithContent(tempDir, "file", "some content"));
 	}
 
 }

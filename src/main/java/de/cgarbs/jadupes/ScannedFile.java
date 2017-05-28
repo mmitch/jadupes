@@ -4,6 +4,8 @@
  */
 package de.cgarbs.jadupes;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
@@ -14,7 +16,8 @@ import java.nio.file.Path;
  */
 public class ScannedFile
 {
-	private Path file;
+	private final Path file;
+	private final long size;
 
 	/**
 	 * creates a new scanned file
@@ -24,7 +27,16 @@ public class ScannedFile
 	 */
 	public ScannedFile(Path file)
 	{
-		this.file = file;
+		try
+		{
+			this.file = file;
+			this.size = Files.size(file);
+		} catch (IOException e)
+		{
+			// Rethrow as unchecked exception because of Stream
+			// handling in Java 8. We want to exit anyway.
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**
@@ -33,6 +45,14 @@ public class ScannedFile
 	public Path getFile()
 	{
 		return file;
+	}
+
+	/**
+	 * @return the size of this file
+	 */
+	public long getSize()
+	{
+		return size;
 	}
 
 	@Override
