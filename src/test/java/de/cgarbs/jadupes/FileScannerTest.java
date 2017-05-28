@@ -4,15 +4,15 @@
  */
 package de.cgarbs.jadupes;
 
+import static de.cgarbs.jadupes.test.FileHelper.createFileWithContent;
+import static de.cgarbs.jadupes.test.FileHelper.createSubdirectory;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.collection.IsArrayContainingInAnyOrder.arrayContainingInAnyOrder;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.junit.Assert.assertThat;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -106,20 +106,6 @@ public class FileScannerTest
 
 		// then
 		assertThat(result.toArray(), arrayContainingInAnyOrder(file1, file2, file3));
-	}
-
-	private Path createSubdirectory(Path dir, String subdir) throws IOException
-	{
-		return Files.createDirectories(dir.resolve(subdir));
-	}
-
-	private Path createFileWithContent(Path directory, String filename, String content) throws IOException
-	{
-		Path file = directory.resolve(filename);
-		BufferedWriter writer = Files.newBufferedWriter(file);
-		writer.write(content);
-		writer.close();
-		return file;
 	}
 
 	// TODO: don't follow symlinks
