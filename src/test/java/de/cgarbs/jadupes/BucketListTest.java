@@ -87,6 +87,25 @@ public class BucketListTest
 				));
 	}
 
+	@Test
+	public void removeUniqueElementsRemovesBucketsWithOnlyOneElement()
+	{
+		// given
+		List<String> elements = Arrays.asList("dog", "cat", "mouse", "house", "tree");
+		BucketList<String> bucketList = BucketList.create(elements, String::length);
+
+		// when
+		BucketList<String> result = bucketList.removeUniqueElements();
+
+		// then
+		assertThat(result.getBuckets().toArray(), //
+				arrayContainingInAnyOrder( //
+						Arrays.asList("dog", "cat"), //
+						Arrays.asList("mouse", "house") //
+				// "tree" is removed
+				));
+	}
+
 	private int getDigits(Integer i)
 	{
 		return i.toString().length();

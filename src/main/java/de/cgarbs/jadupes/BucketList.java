@@ -31,7 +31,7 @@ public class BucketList<T>
 	}
 
 	/**
-	 * creates a bucket list
+	 * Creates a bucket list.
 	 * 
 	 * @param elements
 	 *            the elements to put into the bucket list
@@ -70,10 +70,25 @@ public class BucketList<T>
 						.collect(Collectors.toList()));
 	}
 
+	/**
+	 * Creates a new bucket list in which all buckets that contain only
+	 * one element are removed.
+	 * 
+	 * @return a new bucket list without all unique elements
+	 */
+	public BucketList<T> removeUniqueElements()
+	{
+		return new BucketList<T>( //
+				buckets.stream() //
+						.filter(bucket -> bucket.size() > 1) //
+						.collect(Collectors.toList()));
+	}
+
 	private static <T, R> Collection<List<T>> partition(List<T> elements, Function<T, R> classifier)
 	{
 		return elements.stream() //
 				.collect(Collectors.groupingBy(classifier)) //
 				.values();
 	}
+
 }
