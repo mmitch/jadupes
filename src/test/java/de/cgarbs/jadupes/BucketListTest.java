@@ -48,4 +48,22 @@ public class BucketListTest
 						Arrays.asList("C") //
 				));
 	}
+
+	@Test
+	public void bucketListOfStringsByTheirSize()
+	{
+		// given
+		List<String> elements = Arrays.asList("dog", "cat", "mouse", "house", "tree");
+
+		// when
+		BucketList<String> result = BucketList.create(elements, String::length);
+
+		// then
+		assertThat(result.getBuckets().toArray(), //
+				arrayContainingInAnyOrder( //
+						Arrays.asList("dog", "cat"), //
+						Arrays.asList("mouse", "house"), //
+						Arrays.asList("tree") //
+				));
+	}
 }

@@ -4,10 +4,10 @@
  */
 package de.cgarbs.jadupes;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * A big list that is divided into sublists (buckets) via given
@@ -23,11 +23,13 @@ import java.util.function.Function;
  */
 public class BucketList<T>
 {
-	private List<T> elements;
+	private final Collection<List<T>> buckets;
 
-	private BucketList(List<T> elements)
+	private <R> BucketList(List<T> elements, Function<T, R> classifier)
 	{
-		this.elements = elements;
+		buckets = elements.stream() //
+				.collect(Collectors.groupingBy(classifier)) //
+				.values();
 	}
 
 	/**
@@ -35,23 +37,21 @@ public class BucketList<T>
 	 * 
 	 * @param elements
 	 *            the elements to put into the bucket list
-	 * @param keyExtractor
-	 *            extracts the bucket identifier for
+	 * @param classifier
+	 *            extracts the bucket identifier for every element
 	 * @return a new bucket list
 	 */
-	public static <T, R> BucketList<T> create(List<T> elements, Function<T, R> keyExtractor)
+	public static <T, R> BucketList<T> create(List<T> elements, Function<T, R> classifier)
 	{
-		return new BucketList<T>(elements);
+		return new BucketList<T>(elements, classifier);
 	}
 
 	/**
 	 * @return the buckets containing the elements (a list of lists)
 	 */
-	public List<List<T>> getBuckets()
+	public Collection<List<T>> getBuckets()
 	{
-		ArrayList<List<T>> ret = new ArrayList<List<T>>();
-		elements.forEach(element -> ret.add(Arrays.asList(element)));
-		return ret;
+		return buckets;
 	}
 
 }
