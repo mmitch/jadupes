@@ -9,6 +9,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,6 +18,7 @@ import java.nio.file.Path;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 
 @SuppressWarnings("javadoc")
@@ -24,6 +26,9 @@ public class ScannedFileTest
 {
 	@Rule
 	public TemporaryFolder tempFolder = new TemporaryFolder();
+
+	@Rule
+	public final ExpectedException exception = ExpectedException.none();
 
 	private Path tempDir;
 
@@ -141,6 +146,20 @@ public class ScannedFileTest
 		// then
 		assertThat(result, is(false));
 
+	}
+
+	@Test
+	public void scanningNonExistingFileThrowsRuntimeException()
+	{
+		// given
+		Path madeUpFilename = tempDir.resolve("doesNotExist");
+
+		// when
+		exception.expect(RuntimeException.class);
+		new ScannedFile(madeUpFilename);
+
+		// then
+		fail("no exception thrown!");
 	}
 
 	private ScannedFile createUnspecifiedScannedFile() throws IOException
