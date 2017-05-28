@@ -5,6 +5,7 @@
 package de.cgarbs.jadupes;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
@@ -22,6 +23,12 @@ import java.util.function.Function;
  */
 public class BucketList<T>
 {
+	private List<T> elements;
+
+	private BucketList(List<T> elements)
+	{
+		this.elements = elements;
+	}
 
 	/**
 	 * creates a bucket list
@@ -34,7 +41,7 @@ public class BucketList<T>
 	 */
 	public static <T, R> BucketList<T> create(List<T> elements, Function<T, R> keyExtractor)
 	{
-		return new BucketList<T>();
+		return new BucketList<T>(elements);
 	}
 
 	/**
@@ -42,7 +49,9 @@ public class BucketList<T>
 	 */
 	public List<List<T>> getBuckets()
 	{
-		return new ArrayList<List<T>>();
+		ArrayList<List<T>> ret = new ArrayList<List<T>>();
+		elements.forEach(element -> ret.add(Arrays.asList(element)));
+		return ret;
 	}
 
 }

@@ -5,9 +5,11 @@
 package de.cgarbs.jadupes;
 
 import static java.util.function.Function.identity;
+import static org.hamcrest.collection.IsArrayContainingInAnyOrder.arrayContainingInAnyOrder;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.junit.Assert.assertThat;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,4 +31,21 @@ public class BucketListTest
 		assertThat(result.getBuckets(), empty());
 	}
 
+	@Test
+	public void bucketListWithIdentityFunctionWrapsEveryElementIntoAList()
+	{
+		// given
+		List<String> elements = Arrays.asList("A", "B", "C");
+
+		// when
+		BucketList<String> result = BucketList.create(elements, identity());
+
+		// then
+		assertThat(result.getBuckets().toArray(), //
+				arrayContainingInAnyOrder( //
+						Arrays.asList("A"), //
+						Arrays.asList("B"), //
+						Arrays.asList("C") //
+				));
+	}
 }
