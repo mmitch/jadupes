@@ -10,15 +10,10 @@ package de.cgarbs.jadupes.data;
  * @author Christian Garbs &lt;mitch@cgarbs.de&gt;
  *
  */
-public class Configuration
+public interface Configuration
 {
 	/**
 	 * bytes to read() at once
 	 */
 	public static final int READ_BLOCK_SIZE = 4096;
-
-	private Configuration()
-	{
-		// Singleton, only constants
-	}
 }
