@@ -63,7 +63,7 @@ public class FileComparator
 				sameContent = false;
 				break;
 			}
-		} while (bytesRead1 >= 0 && bytesRead2 >= 0);
+		} while (bytesRead1 >= 0); // bytesRead2 must be equal here
 
 		input1.close();
 		input2.close();
