@@ -13,6 +13,21 @@ jacocoTestReport {
     }
 }
 
+/* mutation testing
+   see: https://pitest.org https://gradle-pitest-plugin.solidsoft.info */
+apply plugin: 'info.solidsoft.pitest'
+pitest {
+	targetClasses = ['de.cgarbs.jadupes.*']
+}
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: '1.1.11'
+	}
+}
+
 repositories {
     mavenCentral()
 }
