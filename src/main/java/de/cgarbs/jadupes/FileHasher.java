@@ -26,8 +26,6 @@ import net.openhft.hashing.LongHashFunction;
  */
 public class FileHasher
 {
-	private static final int READ_BLOCK_SIZE = 4096;
-
 	/**
 	 * returns the xxHash of a file
 	 * 
@@ -39,7 +37,7 @@ public class FileHasher
 	 */
 	public long getHash(Path file) throws IOException
 	{
-		byte[] buffer = new byte[READ_BLOCK_SIZE];
+		byte[] buffer = new byte[Configuration.READ_BLOCK_SIZE];
 		long hashValue = 0;
 		int bytesRead;
 
