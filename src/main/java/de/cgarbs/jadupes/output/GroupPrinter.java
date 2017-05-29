@@ -2,11 +2,13 @@
  * Copyright 2017 (C)  Christian Garbs <mitch@cgarbs.de>
  * Licensed under GNU GPL 3 (or later)
  */
-package de.cgarbs.jadupes;
+package de.cgarbs.jadupes.output;
 
 import java.io.PrintStream;
 import java.nio.file.Path;
 import java.util.List;
+
+import de.cgarbs.jadupes.data.ScannedFile;
 
 /**
  * Printer for groups of files

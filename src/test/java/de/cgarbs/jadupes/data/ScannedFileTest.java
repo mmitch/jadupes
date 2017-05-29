@@ -2,7 +2,7 @@
  * Copyright 2017 (C)  Christian Garbs <mitch@cgarbs.de>
  * Licensed under GNU GPL 3 (or later)
  */
-package de.cgarbs.jadupes;
+package de.cgarbs.jadupes.data;
 
 import static de.cgarbs.jadupes.test.FileHelper.createFileWithContent;
 import static org.hamcrest.CoreMatchers.is;

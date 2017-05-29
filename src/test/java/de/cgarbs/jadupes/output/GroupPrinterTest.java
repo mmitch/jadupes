@@ -2,7 +2,7 @@
  * Copyright 2017 (C)  Christian Garbs <mitch@cgarbs.de>
  * Licensed under GNU GPL 3 (or later)
  */
-package de.cgarbs.jadupes;
+package de.cgarbs.jadupes.output;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -15,6 +15,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.cgarbs.jadupes.data.ScannedFile;
 import de.cgarbs.jadupes.test.PrintStreamRecorder;
 
 @SuppressWarnings("javadoc")

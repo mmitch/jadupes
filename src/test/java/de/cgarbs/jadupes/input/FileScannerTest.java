@@ -2,7 +2,7 @@
  * Copyright 2017 (C)  Christian Garbs <mitch@cgarbs.de>
  * Licensed under GNU GPL 3 (or later)
  */
-package de.cgarbs.jadupes;
+package de.cgarbs.jadupes.input;
 
 import static de.cgarbs.jadupes.test.FileHelper.createFileWithContent;
 import static de.cgarbs.jadupes.test.FileHelper.createSubdirectory;
@@ -20,6 +20,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+
+import de.cgarbs.jadupes.data.ScannedFile;
 
 @SuppressWarnings("javadoc")
 public class FileScannerTest

@@ -10,7 +10,7 @@ import java.io.RandomAccessFile;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import de.cgarbs.jadupes.Configuration;
+import de.cgarbs.jadupes.data.Configuration;
 
 /**
  * Helper methods regarding Files and Pathes for unit testing.

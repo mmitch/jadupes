@@ -2,7 +2,7 @@
  * Copyright 2017 (C)  Christian Garbs <mitch@cgarbs.de>
  * Licensed under GNU GPL 3 (or later)
  */
-package de.cgarbs.jadupes;
+package de.cgarbs.jadupes.filter;
 
 import static java.util.function.Function.identity;
 import static org.hamcrest.collection.IsArrayContainingInAnyOrder.arrayContainingInAnyOrder;
@@ -14,6 +14,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.junit.Test;
+
+import de.cgarbs.jadupes.filter.BucketList;
 
 @SuppressWarnings("javadoc")
 public class BucketListTest
