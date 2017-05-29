@@ -19,6 +19,13 @@ public class ScannedFile
 	private final Path file;
 	private final long size;
 
+	// only for testing
+	protected ScannedFile(Path file, long size)
+	{
+		this.file = file;
+		this.size = size;
+	}
+
 	/**
 	 * creates a new scanned file
 	 * 
