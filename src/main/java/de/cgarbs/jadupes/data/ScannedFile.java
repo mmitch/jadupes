@@ -19,6 +19,7 @@ public class ScannedFile
 	private final Path file;
 	private final long size;
 
+	// TODO: create @VisibleForTest annotation and use it where appropriate
 	// only for testing
 	protected ScannedFile(Path file, long size)
 	{
