@@ -16,19 +16,14 @@ import de.cgarbs.jadupes.data.ScannedFile;
  * @author Christian Garbs &lt;mitch@cgarbs.de&gt;
  *
  */
-public class GroupPrinter
+public class GroupPrinter implements OutputAction
 {
 	PrintStream output = System.out;
 
 	private boolean firstGroup = true;
 
-	/**
-	 * prints the names of a group of files
-	 * 
-	 * @param files
-	 *            the files to print
-	 */
-	public void printGroup(List<ScannedFile> files)
+	@Override
+	public void processGroup(List<ScannedFile> files)
 	{
 		if (firstGroup)
 		{
@@ -43,6 +38,12 @@ public class GroupPrinter
 				.map(ScannedFile::getFile) //
 				.map(Path::toString) //
 				.forEach(output::println);
+	}
+
+	@Override
+	public void finalizeOutput()
+	{
+		// not needed
 	}
 
 }

@@ -35,7 +35,7 @@ public class StatisticsPrinterTest
 		// given
 
 		// when
-		printer_underTest.printResult();
+		printer_underTest.finalizeOutput();
 
 		// then
 		assertThat(recorder.getLinesLeft(), is(3));
@@ -49,10 +49,10 @@ public class StatisticsPrinterTest
 	{
 		// given
 		List<ScannedFile> group = Arrays.asList(new FakeScannedFile(100), new FakeScannedFile(100));
-		printer_underTest.registerGroup(group);
+		printer_underTest.processGroup(group);
 
 		// when
-		printer_underTest.printResult();
+		printer_underTest.finalizeOutput();
 
 		// then
 		assertThat(recorder.getLinesLeft(), is(3));
@@ -67,11 +67,11 @@ public class StatisticsPrinterTest
 		// given
 		List<ScannedFile> group1 = Arrays.asList(new FakeScannedFile(100), new FakeScannedFile(100), new FakeScannedFile(100));
 		List<ScannedFile> group2 = Arrays.asList(new FakeScannedFile(2000), new FakeScannedFile(2000));
-		printer_underTest.registerGroup(group1);
-		printer_underTest.registerGroup(group2);
+		printer_underTest.processGroup(group1);
+		printer_underTest.processGroup(group2);
 
 		// when
-		printer_underTest.printResult();
+		printer_underTest.finalizeOutput();
 
 		// then
 		assertThat(recorder.getLinesLeft(), is(3));

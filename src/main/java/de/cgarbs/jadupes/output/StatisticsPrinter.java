@@ -16,7 +16,7 @@ import de.cgarbs.jadupes.data.ScannedFile;
  * @author Christian Garbs &lt;mitch@cgarbs.de&gt;
  *
  */
-public class StatisticsPrinter
+public class StatisticsPrinter implements OutputAction
 {
 	// TODO: common superclass for all Printers
 
@@ -28,23 +28,8 @@ public class StatisticsPrinter
 
 	PrintStream output = System.out;
 
-	/**
-	 * print the statistics summary
-	 */
-	public void printResult()
-	{
-		printfln("%s duplicate file groups", totalGroupCount);
-		printfln("%s duplicate files using %s bytes", totalFileCount, totalFileSize);
-		printfln("%s files using %s bytes to be deduplicated", totalDeduplicationCount, totalDeduplicationSize);
-	}
-
-	/**
-	 * count a group of files
-	 * 
-	 * @param files
-	 *            the files to count
-	 */
-	public void registerGroup(List<ScannedFile> files)
+	@Override
+	public void processGroup(List<ScannedFile> files)
 	{
 		// all files of a group have the same size
 		BigInteger fileSize = BigInteger.valueOf(files.get(0).getSize());
@@ -58,9 +43,16 @@ public class StatisticsPrinter
 		totalDeduplicationSize = totalDeduplicationSize.add(duplicateCount.multiply(fileSize));
 	}
 
+	@Override
+	public void finalizeOutput()
+	{
+		printfln("%s duplicate file groups", totalGroupCount);
+		printfln("%s duplicate files using %s bytes", totalFileCount, totalFileSize);
+		printfln("%s files using %s bytes to be deduplicated", totalDeduplicationCount, totalDeduplicationSize);
+	}
+
 	private void printfln(String format, Object... args)
 	{
 		output.println(String.format(format, args));
 	}
-
 }

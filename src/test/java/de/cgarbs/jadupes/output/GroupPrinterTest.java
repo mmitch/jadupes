@@ -37,7 +37,7 @@ public class GroupPrinterTest
 		List<ScannedFile> emptyList = Collections.emptyList();
 
 		// when
-		printer_underTest.printGroup(emptyList);
+		printer_underTest.processGroup(emptyList);
 
 		// then
 		assertThat(recorder.getLinesLeft(), is(0));
@@ -52,7 +52,7 @@ public class GroupPrinterTest
 		List<ScannedFile> fileGroup = Arrays.asList(file1, file2);
 
 		// when
-		printer_underTest.printGroup(fileGroup);
+		printer_underTest.processGroup(fileGroup);
 
 		// then
 		assertThat(recorder.getLinesLeft(), is(2));
@@ -68,14 +68,44 @@ public class GroupPrinterTest
 		List<ScannedFile> fileGroup2 = Collections.singletonList(new FakeScannedFile("file_2"));
 
 		// when
-		printer_underTest.printGroup(fileGroup1);
-		printer_underTest.printGroup(fileGroup2);
+		printer_underTest.processGroup(fileGroup1);
+		printer_underTest.processGroup(fileGroup2);
 
 		// then
 		assertThat(recorder.getLinesLeft(), is(3));
 		assertThat(recorder.getNextLine(), is("file_1"));
 		assertThat(recorder.getNextLine(), is(""));
 		assertThat(recorder.getNextLine(), is("file_2"));
+	}
+
+	@Test
+	public void withoutFileGroupsFinalizeDoesNothing()
+	{
+		// given
+
+		// when
+		printer_underTest.finalizeOutput();
+
+		// when
+		assertThat(recorder.getLinesLeft(), is(0));
+	}
+
+	@Test
+	public void withFileGroupsFinalizeDoesNothing()
+	{
+		// given
+		ScannedFile file1 = new FakeScannedFile("file_1");
+		ScannedFile file2 = new FakeScannedFile("file_2");
+		List<ScannedFile> fileGroup = Arrays.asList(file1, file2);
+		printer_underTest.processGroup(fileGroup);
+		recorder.reset();
+
+		// when
+		printer_underTest.finalizeOutput();
+
+		// when
+		// one line per file from processGroup(), but nothing else
+		assertThat(recorder.getLinesLeft(), is(0));
 	}
 
 	private class FakeScannedFile extends ScannedFile

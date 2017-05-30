@@ -52,4 +52,12 @@ public class PrintStreamRecorder extends PrintStream
 	{
 		return recordedLines.pollLast();
 	}
+
+	/**
+	 * removes all recorded lines
+	 */
+	public void reset()
+	{
+		recordedLines.clear();
+	}
 }
