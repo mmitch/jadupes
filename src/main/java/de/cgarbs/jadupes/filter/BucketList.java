@@ -68,7 +68,7 @@ public class BucketList<T>
 	 *            extracts the bucket identifier for every element
 	 * @return a new bucket list
 	 */
-	public static <T, R> BucketList<T> create(List<T> elements, Function<T, R> classifier)
+	public static <T, R> BucketList<T> create(List<T> elements, Classifier<T, R> classifier)
 	{
 
 		return new BucketList<T>(partition(elements, classifier));

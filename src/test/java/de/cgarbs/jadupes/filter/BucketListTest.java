@@ -4,7 +4,6 @@
  */
 package de.cgarbs.jadupes.filter;
 
-import static java.util.function.Function.identity;
 import static org.hamcrest.collection.IsArrayContainingInAnyOrder.arrayContainingInAnyOrder;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.junit.Assert.assertThat;
@@ -27,7 +26,7 @@ public class BucketListTest
 		List<String> emptyList = Collections.emptyList();
 
 		// when
-		BucketList<String> result = BucketList.create(emptyList, identity());
+		BucketList<String> result = BucketList.create(emptyList, this::identity);
 
 		// then
 		assertThat(result.getBuckets(), empty());
@@ -40,7 +39,7 @@ public class BucketListTest
 		List<String> elements = Arrays.asList("A", "B", "C");
 
 		// when
-		BucketList<String> result = BucketList.create(elements, identity());
+		BucketList<String> result = BucketList.create(elements, this::identity);
 
 		// then
 		assertThat(result.getBuckets().toArray(), //
@@ -161,5 +160,10 @@ public class BucketListTest
 		}
 
 		return listOfLists;
+	}
+
+	private <T> T identity(T obj)
+	{
+		return obj;
 	}
 }
