@@ -6,6 +6,7 @@ package de.cgarbs.jadupes.filter;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.LongSummaryStatistics;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -128,6 +129,27 @@ public class BucketList<T>
 				buckets.stream() //
 						.filter(bucket -> bucket.size() > 1) //
 						.collect(Collectors.toList()));
+	}
+
+	@Override
+	public String toString()
+	{
+		LongSummaryStatistics statistics = buckets.stream() //
+				.collect(Collectors.summarizingLong(List::size));
+
+		long bucketCount = statistics.getCount();
+		long elementCount = statistics.getSum();
+		long minElements = statistics.getMin();
+		double avgElements = statistics.getAverage();
+		long maxElements = statistics.getMax();
+
+		if (bucketCount == 0)
+		{
+			minElements = 0;
+			maxElements = 0;
+		}
+
+		return String.format("BucketList: total: %d buckets, %d elements, min/avg/max elements per bucket: %d/%.0f/%d", bucketCount, elementCount, minElements, avgElements, maxElements);
 	}
 
 	private static <T, R> Collection<List<T>> partition(List<T> elements, Function<T, R> classifier)

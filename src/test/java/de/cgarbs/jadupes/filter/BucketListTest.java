@@ -4,6 +4,7 @@
  */
 package de.cgarbs.jadupes.filter;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.collection.IsArrayContainingInAnyOrder.arrayContainingInAnyOrder;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.junit.Assert.assertThat;
@@ -125,6 +126,71 @@ public class BucketListTest
 						Arrays.asList("mouse", "house") //
 				// "tree" is removed
 				));
+	}
+
+	@Test
+	public void checkStatisticsForEmptyBucketList()
+	{
+		// given
+		BucketList<String> empty = BucketList.create(Collections.emptyList(), this::identity);
+
+		// when
+		String result = empty.toString();
+
+		// then
+		assertThat(result, is("BucketList: total: 0 buckets, 0 elements, min/avg/max elements per bucket: 0/0/0"));
+	}
+
+	@Test
+	public void checkStatisticsForBucketListWithOneElement()
+	{
+		// given
+		BucketList<String> empty = BucketList.create(Arrays.asList("dog"), this::identity);
+
+		// when
+		String result = empty.toString();
+
+		// then
+		assertThat(result, is("BucketList: total: 1 buckets, 1 elements, min/avg/max elements per bucket: 1/1/1"));
+	}
+
+	@Test
+	public void checkStatisticsForBucketListWithTwoElementsInOneBucket()
+	{
+		// given
+		BucketList<String> empty = BucketList.create(Arrays.asList("dog", "dog"), this::identity);
+
+		// when
+		String result = empty.toString();
+
+		// then
+		assertThat(result, is("BucketList: total: 1 buckets, 2 elements, min/avg/max elements per bucket: 2/2/2"));
+	}
+
+	@Test
+	public void checkStatisticsForBucketListWithTwoElementsInTwoBuckets()
+	{
+		// given
+		BucketList<String> empty = BucketList.create(Arrays.asList("dog", "cat"), this::identity);
+
+		// when
+		String result = empty.toString();
+
+		// then
+		assertThat(result, is("BucketList: total: 2 buckets, 2 elements, min/avg/max elements per bucket: 1/1/1"));
+	}
+
+	@Test
+	public void checkStatisticsForBucketListWithSixElementsInThreeBuckets()
+	{
+		// given
+		BucketList<String> empty = BucketList.create(Arrays.asList("ant", "dog", "cat", "horse", "goat", "tiger"), String::length);
+
+		// when
+		String result = empty.toString();
+
+		// then
+		assertThat(result, is("BucketList: total: 3 buckets, 6 elements, min/avg/max elements per bucket: 1/2/3"));
 	}
 
 	private int getDigits(Integer i)
