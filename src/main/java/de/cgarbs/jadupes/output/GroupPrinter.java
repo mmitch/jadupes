@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 import de.cgarbs.jadupes.data.ScannedFile;
+import de.cgarbs.jadupes.test.VisibleForTesting;
 
 /**
  * Printer for groups of files
@@ -18,6 +19,7 @@ import de.cgarbs.jadupes.data.ScannedFile;
  */
 public class GroupPrinter implements OutputAction
 {
+	@VisibleForTesting
 	PrintStream output = System.out;
 
 	private boolean firstGroup = true;

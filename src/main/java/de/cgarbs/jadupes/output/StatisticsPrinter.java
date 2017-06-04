@@ -9,6 +9,7 @@ import java.math.BigInteger;
 import java.util.List;
 
 import de.cgarbs.jadupes.data.ScannedFile;
+import de.cgarbs.jadupes.test.VisibleForTesting;
 
 /**
  * Prints statistics about groups of files.
@@ -24,6 +25,7 @@ public class StatisticsPrinter implements OutputAction
 	BigInteger totalDeduplicationCount = BigInteger.ZERO;
 	BigInteger totalDeduplicationSize = BigInteger.ZERO;
 
+	@VisibleForTesting
 	PrintStream output = System.out;
 
 	@Override

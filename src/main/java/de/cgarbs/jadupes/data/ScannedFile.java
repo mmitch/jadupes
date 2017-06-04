@@ -10,6 +10,8 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Map;
 
+import de.cgarbs.jadupes.test.VisibleForTesting;
+
 /**
  * a relevant file
  * 
@@ -23,8 +25,7 @@ public class ScannedFile
 	private final Object fileKey;
 	// TODO: add "unix:device" attribute to use for BucketList grouping
 
-	// TODO: create @VisibleForTest annotation and use it where appropriate
-	// only for testing
+	@VisibleForTesting
 	protected ScannedFile(Path file, long size, Object fileKey)
 	{
 		this.file = file;
