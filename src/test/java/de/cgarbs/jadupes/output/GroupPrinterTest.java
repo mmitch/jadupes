@@ -113,7 +113,7 @@ public class GroupPrinterTest
 
 		public FakeScannedFile(String filename)
 		{
-			super(Paths.get(filename), 0);
+			super(Paths.get(filename), 0, filename);
 		}
 
 	}

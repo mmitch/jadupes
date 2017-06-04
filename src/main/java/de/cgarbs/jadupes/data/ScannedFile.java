@@ -7,6 +7,8 @@ package de.cgarbs.jadupes.data;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Map;
 
 /**
  * a relevant file
@@ -18,13 +20,15 @@ public class ScannedFile
 {
 	private final Path file;
 	private final long size;
+	private final Object fileKey;
 
 	// TODO: create @VisibleForTest annotation and use it where appropriate
 	// only for testing
-	protected ScannedFile(Path file, long size)
+	protected ScannedFile(Path file, long size, Object fileKey)
 	{
 		this.file = file;
 		this.size = size;
+		this.fileKey = fileKey;
 	}
 
 	/**
@@ -38,7 +42,9 @@ public class ScannedFile
 		try
 		{
 			this.file = file;
-			this.size = Files.size(file);
+			Map<String, Object> attributes = Files.readAttributes(file, "size,fileKey");
+			this.size = Long.parseLong(attributes.get("size").toString());
+			this.fileKey = attributes.get("fileKey");
 		} catch (IOException e)
 		{
 			// Rethrow as unchecked exception because of Stream
@@ -61,6 +67,20 @@ public class ScannedFile
 	public long getSize()
 	{
 		return size;
+	}
+
+	/**
+	 * A file key is something unique to every file except for hardlinked files
+	 * or the like.
+	 * Under POSIX, it's something like a <code>device:inode</code> pair.
+	 * 
+	 * @return the file key of this file
+	 * 
+	 * @see BasicFileAttributes#fileKey()
+	 */
+	public Object getFileKey()
+	{
+		return fileKey;
 	}
 
 	@Override

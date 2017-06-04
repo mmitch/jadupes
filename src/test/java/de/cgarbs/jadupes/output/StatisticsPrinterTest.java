@@ -84,7 +84,7 @@ public class StatisticsPrinterTest
 	{
 		public FakeScannedFile(long size)
 		{
-			super(Paths.get(""), size);
+			super(Paths.get(""), size, "");
 		}
 	}
 }

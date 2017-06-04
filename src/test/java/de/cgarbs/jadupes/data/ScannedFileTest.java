@@ -162,6 +162,42 @@ public class ScannedFileTest
 		fail("no exception thrown!");
 	}
 
+	@Test
+	public void filesWithSameContentYieldDifferentFileKey() throws IOException
+	{
+		// given
+		Path file1 = createFileWithContent(tempDir, "file1", "FOO");
+		Path file2 = createFileWithContent(tempDir, "file2", "BAR");
+
+		ScannedFile scannedFile1 = new ScannedFile(file1);
+		ScannedFile scannedFile2 = new ScannedFile(file2);
+
+		// when
+		Object fileKey1 = scannedFile1.getFileKey();
+		Object fileKey2 = scannedFile2.getFileKey();
+
+		// then
+		assertThat(fileKey1, not(fileKey2));
+	}
+
+	@Test
+	public void hardlinkedFilesYieldDifferentFileKey() throws IOException
+	{
+		// given
+		Path file1 = createFileWithContent(tempDir, "file1", "FOO");
+		Path file2 = Files.createLink(tempDir.resolve("file2"), file1);
+
+		ScannedFile scannedFile1 = new ScannedFile(file1);
+		ScannedFile scannedFile2 = new ScannedFile(file2);
+
+		// when
+		Object fileKey1 = scannedFile1.getFileKey();
+		Object fileKey2 = scannedFile2.getFileKey();
+
+		// then
+		assertThat(fileKey1, is(fileKey2));
+	}
+
 	private ScannedFile createUnspecifiedScannedFile() throws IOException
 	{
 		return new ScannedFile(createFileWithContent(tempDir, "file", "some content"));
