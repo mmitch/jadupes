@@ -19,6 +19,8 @@ public interface OutputAction
 	/**
 	 * processes a single group of duplicate files
 	 * 
+	 * FIXME: check for already linked files within the groups!
+	 * 
 	 * @param files
 	 *            the files in the group
 	 */
