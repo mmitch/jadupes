@@ -24,8 +24,6 @@ import java.util.stream.Collectors;
  */
 public class BucketList<T>
 {
-	// TODO: check if further inner classes rise readability (eg. Bucket class)
-
 	/**
 	 * Identifies sub-buckets by a value for every element.
 	 * Elements mapping to the same value are put in the same sub-bucket.
