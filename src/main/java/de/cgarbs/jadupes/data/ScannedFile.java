@@ -24,6 +24,7 @@ public class ScannedFile
 	private final long size;
 	private final Object fileKey;
 	// TODO: add "unix:device" attribute to use for BucketList grouping
+	// TODO: add "unix:nlink" attribute to use for choosing hardlink base
 
 	@VisibleForTesting
 	protected ScannedFile(Path file, long size, Object fileKey)
