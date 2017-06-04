@@ -6,9 +6,11 @@ package de.cgarbs.jadupes.output;
 
 import java.io.PrintStream;
 import java.math.BigInteger;
+import java.util.Collection;
 import java.util.List;
 
 import de.cgarbs.jadupes.data.ScannedFile;
+import de.cgarbs.jadupes.filter.BucketList;
 import de.cgarbs.jadupes.test.VisibleForTesting;
 
 /**
@@ -34,7 +36,9 @@ public class StatisticsPrinter implements OutputAction
 		// all files of a group have the same size
 		BigInteger fileSize = BigInteger.valueOf(files.get(0).getSize());
 		BigInteger fileCount = BigInteger.valueOf(files.size());
-		BigInteger duplicateCount = BigInteger.valueOf(files.size() - 1);
+
+		Collection<List<ScannedFile>> filesByFileKey = BucketList.create(files, ScannedFile::getFileKey).getBuckets();
+		BigInteger duplicateCount = BigInteger.valueOf(filesByFileKey.size() - 1);
 
 		totalGroupCount = totalGroupCount.add(BigInteger.ONE);
 		totalFileCount = totalFileCount.add(fileCount);

@@ -80,11 +80,41 @@ public class StatisticsPrinterTest
 		assertThat(recorder.getNextLine(), is("3 files using 2200 bytes to be deduplicated"));
 	}
 
-	private class FakeScannedFile extends ScannedFile
+	@Test
+	public void alreadyHardlinkedFilesDontCountAsToBeDeduplicated()
 	{
+		// given
+		List<ScannedFile> group = Arrays.asList( //
+				new FakeScannedFile(100, "file-key"), //
+				new FakeScannedFile(100, "file-key"), //
+				new FakeScannedFile(100, "DIFFERENT-FILE-KEY") //
+		);
+		printer_underTest.processGroup(group);
+
+		// when
+		printer_underTest.finalizeOutput();
+
+		// then
+		assertThat(recorder.getLinesLeft(), is(3));
+		assertThat(recorder.getNextLine(), is("1 duplicate file groups"));
+		assertThat(recorder.getNextLine(), is("3 duplicate files using 300 bytes"));
+
+		// note: not 2 files/200 bytes
+		assertThat(recorder.getNextLine(), is("1 files using 100 bytes to be deduplicated"));
+	}
+
+	private static class FakeScannedFile extends ScannedFile
+	{
+		private static int fileKey = 0;
+
 		public FakeScannedFile(long size)
 		{
-			super(Paths.get(""), size, "");
+			this(size, Integer.toString(fileKey++));
+		}
+
+		public FakeScannedFile(long size, String fileKey)
+		{
+			super(Paths.get(""), size, fileKey);
 		}
 	}
 }
