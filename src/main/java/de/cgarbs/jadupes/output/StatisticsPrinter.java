@@ -18,8 +18,6 @@ import de.cgarbs.jadupes.data.ScannedFile;
  */
 public class StatisticsPrinter implements OutputAction
 {
-	// TODO: common superclass for all Printers
-
 	BigInteger totalGroupCount = BigInteger.ZERO;
 	BigInteger totalFileCount = BigInteger.ZERO;
 	BigInteger totalFileSize = BigInteger.ZERO;
