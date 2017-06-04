@@ -19,11 +19,11 @@ import de.cgarbs.jadupes.test.VisibleForTesting;
  */
 public class StatisticsPrinter implements OutputAction
 {
-	BigInteger totalGroupCount = BigInteger.ZERO;
-	BigInteger totalFileCount = BigInteger.ZERO;
-	BigInteger totalFileSize = BigInteger.ZERO;
-	BigInteger totalDeduplicationCount = BigInteger.ZERO;
-	BigInteger totalDeduplicationSize = BigInteger.ZERO;
+	private BigInteger totalGroupCount = BigInteger.ZERO;
+	private BigInteger totalFileCount = BigInteger.ZERO;
+	private BigInteger totalFileSize = BigInteger.ZERO;
+	private BigInteger totalDeduplicationCount = BigInteger.ZERO;
+	private BigInteger totalDeduplicationSize = BigInteger.ZERO;
 
 	@VisibleForTesting
 	PrintStream output = System.out;
