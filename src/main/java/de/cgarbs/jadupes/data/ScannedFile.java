@@ -21,6 +21,7 @@ public class ScannedFile
 	private final Path file;
 	private final long size;
 	private final Object fileKey;
+	// TODO: add "unix:device" attribute to use for BucketList grouping
 
 	// TODO: create @VisibleForTest annotation and use it where appropriate
 	// only for testing
