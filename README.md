@@ -26,10 +26,6 @@ jdupes called [pdupes](https://github.com/mmitch/pdupes): It turns
 out that currently I like Java and Eclipse refactoring tools more
 than cool classic Perl ;-)
 
-Because Java is platform independent, some things I was planning 
-to use for deduping (like keeping the file with the higher link count
-of two duplicate files and deleting the other) will not be possible.
-
 
 usage
 -----
@@ -38,6 +34,12 @@ usage
 
 jadupes will scan all files in the given directories and will then
 hardlink duplicate files to each other to consume disk space.
+
+
+status
+------
+
+Does not work yet.
 
 
 #TODO
