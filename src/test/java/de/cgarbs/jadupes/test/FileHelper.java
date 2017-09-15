@@ -4,11 +4,15 @@
  */
 package de.cgarbs.jadupes.test;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.stream.Collectors;
 
 import de.cgarbs.jadupes.data.Configuration;
 
@@ -105,4 +109,44 @@ public class FileHelper
 		writer.close();
 		return file;
 	}
+
+	/**
+	 * Asserts that two Paths have the same fileKey (inode or whatever), meaning
+	 * they are hardlinks to the same file. If have different fileKeys, an
+	 * assertion is raised.
+	 * 
+	 * @param actual
+	 *            the first file
+	 * @param expected
+	 *            the second file
+	 * @throws IOException
+	 *             something went wrong
+	 */
+	public static void assertThatSameFile(Path actual, Path expected) throws IOException
+	{
+		assertThat(getFileKey(actual), is(getFileKey(expected)));
+	}
+
+	/**
+	 * Asserts that a file has the given content. If the actual content differs
+	 * from the expected content, an assertion is raised.
+	 * 
+	 * @param file
+	 *            the file
+	 * @param expectedContent
+	 *            the expected content.
+	 * @throws IOException
+	 *             something went wrong
+	 */
+	public static void assertThatFileContains(Path file, String expectedContent) throws IOException
+	{
+		String actualContent = Files.lines(file).collect(Collectors.joining());
+		assertThat(actualContent, is(expectedContent));
+	}
+
+	private static Object getFileKey(Path file) throws IOException
+	{
+		return Files.readAttributes(file, "fileKey").get("fileKey");
+	}
+
 }
