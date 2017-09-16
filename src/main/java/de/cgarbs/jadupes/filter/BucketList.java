@@ -143,10 +143,10 @@ public class BucketList<T>
 
 	private static <T, R> Stream<List<T>> partition(List<T> elements, Function<T, R> classifier)
 	{
-		return elements.stream() //
+		return elements.parallelStream() //
 				.collect(Collectors.groupingBy(classifier)) //
 				.values() //
-				.stream();
+				.parallelStream();
 	}
 
 }
