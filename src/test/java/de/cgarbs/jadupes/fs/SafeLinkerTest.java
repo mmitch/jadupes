@@ -8,6 +8,7 @@ import static de.cgarbs.jadupes.test.FileHelper.assertThatFileContains;
 import static de.cgarbs.jadupes.test.FileHelper.assertThatSameFile;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -74,7 +75,14 @@ public class SafeLinkerTest
 		SafeLinker brokenLinker = new SafeLinkerWithRuntimeException(() -> new UnsupportedOperationException());
 
 		// when
-		brokenLinker.safeLink(linkTarget, originalFile);
+		try
+		{
+			brokenLinker.safeLink(linkTarget, originalFile);
+			fail("UnsupportedOperationException is not thrown");
+		} catch (UnsupportedOperationException e)
+		{
+			// this exception is expected
+		}
 
 		// then
 		assertThatFileContains(originalFile, "aaa");
@@ -90,7 +98,14 @@ public class SafeLinkerTest
 		SafeLinker brokenLinker = new SafeLinkerWithIOException(() -> new IOException());
 
 		// when
-		brokenLinker.safeLink(linkTarget, originalFile);
+		try
+		{
+			brokenLinker.safeLink(linkTarget, originalFile);
+			fail("IOException is not thrown");
+		} catch (IOException e)
+		{
+			// this exception is expected
+		}
 
 		// then
 		assertThatFileContains(originalFile, "aaa");
@@ -106,7 +121,14 @@ public class SafeLinkerTest
 		SafeLinker brokenLinker = new SafeLinkerWithIOException(() -> new IOException());
 
 		// when
-		brokenLinker.safeLink(linkTarget, originalFile);
+		try
+		{
+			brokenLinker.safeLink(linkTarget, originalFile);
+			fail("IOException is not thrown");
+		} catch (IOException e)
+		{
+			// this exception is expected
+		}
 
 		// then
 		assertThatFileContains(originalFile, "aaa");

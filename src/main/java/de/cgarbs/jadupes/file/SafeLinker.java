@@ -47,6 +47,7 @@ public class SafeLinker
 		} catch (UnsupportedOperationException | IOException e)
 		{
 			restoreFile(backupFile, link);
+			throw (e);
 		}
 	}
 
