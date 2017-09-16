@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.junit.Test;
 
@@ -203,7 +204,7 @@ public class BucketListTest
 		return i % 2 == 0;
 	}
 
-	private List<List<Integer>> createPairs(List<Integer> integers)
+	private Stream<List<Integer>> createPairs(List<Integer> integers)
 	{
 		List<List<Integer>> listOfLists = new ArrayList<>();
 		List<Integer> currentList = null;
@@ -225,7 +226,7 @@ public class BucketListTest
 			currentList.add(iter.next());
 		}
 
-		return listOfLists;
+		return listOfLists.stream();
 	}
 
 	private <T> T identity(T obj)

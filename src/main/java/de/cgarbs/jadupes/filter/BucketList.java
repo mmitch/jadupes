@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.LongSummaryStatistics;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * A big list that is divided into sublists (buckets) via given
@@ -47,13 +48,13 @@ public class BucketList<T>
 	 * @param <T>
 	 *            the type of elements in the bucket list
 	 */
-	public interface Partitioner<T> extends Function<List<T>, Collection<List<T>>>
+	public interface Partitioner<T> extends Function<List<T>, Stream<List<T>>>
 	{
 	};
 
-	private final Collection<List<T>> buckets;
+	private final Stream<List<T>> buckets;
 
-	private BucketList(Collection<List<T>> buckets)
+	private BucketList(Stream<List<T>> buckets)
 	{
 		this.buckets = buckets;
 	}
@@ -78,7 +79,7 @@ public class BucketList<T>
 	 */
 	public Collection<List<T>> getBuckets()
 	{
-		return buckets;
+		return buckets.collect(Collectors.toList());
 	}
 
 	/**
@@ -92,10 +93,7 @@ public class BucketList<T>
 	 */
 	public <R> BucketList<T> refine(Classifier<T, R> classifier)
 	{
-		return new BucketList<T>( //
-				buckets.stream() //
-						.flatMap(bucket -> partition(bucket, classifier).stream()) //
-						.collect(Collectors.toList()));
+		return new BucketList<T>(buckets.flatMap(bucket -> partition(bucket, classifier)));
 	}
 
 	/**
@@ -109,10 +107,7 @@ public class BucketList<T>
 	 */
 	public BucketList<T> refine(Partitioner<T> partitioner)
 	{
-		return new BucketList<T>( //
-				buckets.stream() //
-						.flatMap(bucket -> partitioner.apply(bucket).stream()) //
-						.collect(Collectors.toList()));
+		return new BucketList<T>(buckets.flatMap(bucket -> partitioner.apply(bucket)));
 	}
 
 	/**
@@ -123,17 +118,13 @@ public class BucketList<T>
 	 */
 	public BucketList<T> removeUniqueElements()
 	{
-		return new BucketList<T>( //
-				buckets.stream() //
-						.filter(bucket -> bucket.size() > 1) //
-						.collect(Collectors.toList()));
+		return new BucketList<T>(buckets.filter(bucket -> bucket.size() > 1));
 	}
 
 	@Override
 	public String toString()
 	{
-		LongSummaryStatistics statistics = buckets.stream() //
-				.collect(Collectors.summarizingLong(List::size));
+		LongSummaryStatistics statistics = buckets.collect(Collectors.summarizingLong(List::size));
 
 		long bucketCount = statistics.getCount();
 		long elementCount = statistics.getSum();
@@ -150,11 +141,12 @@ public class BucketList<T>
 		return String.format("BucketList: total: %d buckets, %d elements, min/avg/max elements per bucket: %d/%.0f/%d", bucketCount, elementCount, minElements, avgElements, maxElements);
 	}
 
-	private static <T, R> Collection<List<T>> partition(List<T> elements, Function<T, R> classifier)
+	private static <T, R> Stream<List<T>> partition(List<T> elements, Function<T, R> classifier)
 	{
 		return elements.stream() //
 				.collect(Collectors.groupingBy(classifier)) //
-				.values();
+				.values() //
+				.stream();
 	}
 
 }
