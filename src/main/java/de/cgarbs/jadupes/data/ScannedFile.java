@@ -24,7 +24,7 @@ public class ScannedFile
 	private final long size;
 	private final Object fileKey;
 	private final int nlink;
-	// TODO: add "unix:device" attribute to use for BucketList grouping
+	private final long device;
 
 	@VisibleForTesting
 	protected ScannedFile(Path file, long size, Object fileKey)
@@ -33,6 +33,7 @@ public class ScannedFile
 		this.size = size;
 		this.fileKey = fileKey;
 		this.nlink = 1;
+		this.device = 0;
 	}
 
 	/**
@@ -50,10 +51,11 @@ public class ScannedFile
 			// what to do then. Perhaps check once on startup if unix: is
 			// available and then always do this or that (perhaps use
 			// ScannedFile subclasses?)
-			Map<String, Object> attributes = Files.readAttributes(file, "unix:size,fileKey,nlink");
+			Map<String, Object> attributes = Files.readAttributes(file, "unix:size,fileKey,nlink,dev");
 			this.size = Long.parseLong(attributes.get("size").toString());
 			this.fileKey = attributes.get("fileKey");
 			this.nlink = Integer.parseInt(attributes.get("nlink").toString());
+			this.device = Long.parseLong(attributes.get("dev").toString());
 		} catch (IOException e)
 		{
 			// Rethrow as unchecked exception because of Stream
@@ -121,5 +123,10 @@ public class ScannedFile
 			return file.equals(other.file);
 		}
 		return false;
+	}
+
+	public long getDevice()
+	{
+		return device;
 	}
 }

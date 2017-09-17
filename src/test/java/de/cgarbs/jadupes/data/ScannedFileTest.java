@@ -225,6 +225,21 @@ public class ScannedFileTest
 		assertThat(scannedFile.getHardlinkCount(), is(2));
 	}
 
+	@Test
+	public void twoNewFilesInTheSameDirectoryAreOnTheSameDevice() throws IOException
+	{
+		// given
+		Path file1 = createFileWithContent(tempDir, "file1", "FOO");
+		Path file2 = createFileWithContent(tempDir, "file2", "FOO");
+
+		// then
+		ScannedFile scannedFile1 = new ScannedFile(file1);
+		ScannedFile scannedFile2 = new ScannedFile(file2);
+
+		// then
+		assertThat(scannedFile1.getDevice(), is(scannedFile2.getDevice()));
+	}
+
 	private ScannedFile createUnspecifiedScannedFile() throws IOException
 	{
 		return new ScannedFile(createFileWithContent(tempDir, "file", "some content"));
