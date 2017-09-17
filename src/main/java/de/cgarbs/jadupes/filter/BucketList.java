@@ -52,7 +52,8 @@ public class BucketList<T>
 	{
 	};
 
-	private final Stream<List<T>> buckets;
+	// FIXME: make final again (currently impossible bc toString() + Stream)
+	private Stream<List<T>> buckets;
 
 	private BucketList(Stream<List<T>> buckets)
 	{
@@ -121,10 +122,20 @@ public class BucketList<T>
 		return new BucketList<T>(buckets.filter(bucket -> bucket.size() > 1));
 	}
 
+	/**
+	 * <b>look out:</b> this is an expensive operation because it has to convert
+	 * the BucketList Stream to a List and back into a Stream (and another
+	 * Stream)
+	 * 
+	 * TODO: move to dedicated statistics method?
+	 */
 	@Override
 	public String toString()
 	{
-		LongSummaryStatistics statistics = buckets.collect(Collectors.summarizingLong(List::size));
+		List<List<T>> bucketsCopy = buckets.collect(Collectors.toList());
+		buckets = bucketsCopy.parallelStream();
+
+		LongSummaryStatistics statistics = bucketsCopy.parallelStream().collect(Collectors.summarizingLong(List::size));
 
 		long bucketCount = statistics.getCount();
 		long elementCount = statistics.getSum();

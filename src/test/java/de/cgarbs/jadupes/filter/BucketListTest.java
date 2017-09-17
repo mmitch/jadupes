@@ -11,6 +11,7 @@ import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -192,6 +193,23 @@ public class BucketListTest
 
 		// then
 		assertThat(result, is("BucketList: total: 3 buckets, 6 elements, min/avg/max elements per bucket: 1/2/3"));
+	}
+
+	@Test
+	public void statisticsDontMessWithBucketListResult()
+	{
+		List<String> elements = Arrays.asList("A");
+		BucketList<String> bucketList = BucketList.create(elements, this::identity);
+
+		// when
+		bucketList.toString();
+		Collection<List<String>> result = bucketList.getBuckets();
+
+		// then
+		assertThat(result.toArray(), //
+				arrayContainingInAnyOrder( //
+						Arrays.asList("A") //
+				));
 	}
 
 	private int getDigits(Integer i)
