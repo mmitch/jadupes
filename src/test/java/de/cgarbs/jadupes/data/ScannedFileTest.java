@@ -198,6 +198,33 @@ public class ScannedFileTest
 		assertThat(fileKey1, is(fileKey2));
 	}
 
+	@Test
+	public void newFileLinkCountIsOne() throws IOException
+	{
+		// given
+		Path file = createFileWithContent(tempDir, "file", "FOO");
+
+		// then
+		ScannedFile scannedFile = new ScannedFile(file);
+
+		// then
+		assertThat(scannedFile.getHardlinkCount(), is(1));
+	}
+
+	@Test
+	public void hardlinkedFileLinkCountIsTwo() throws IOException
+	{
+		// given
+		Path file = createFileWithContent(tempDir, "file", "FOO");
+		Files.createLink(tempDir.resolve("hardlink"), file);
+
+		// then
+		ScannedFile scannedFile = new ScannedFile(file);
+
+		// then
+		assertThat(scannedFile.getHardlinkCount(), is(2));
+	}
+
 	private ScannedFile createUnspecifiedScannedFile() throws IOException
 	{
 		return new ScannedFile(createFileWithContent(tempDir, "file", "some content"));
