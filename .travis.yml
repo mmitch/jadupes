@@ -11,6 +11,7 @@ before_script:
 after_success:
   - gradle jacocoTestReport
   - codecov
+# - make test
 
 # Gradle specific cache handling
 # see https://docs.travis-ci.com/user/languages/java/#caching
