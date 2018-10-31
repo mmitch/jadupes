@@ -25,19 +25,18 @@ import de.cgarbs.jadupes.data.Directory;
 import de.cgarbs.jadupes.data.ScannedFile;
 
 @SuppressWarnings("javadoc")
-public class FileScannerTest
+public class RegularFileScannerTest
 {
 	@Rule
 	public TemporaryFolder tempFolder = new TemporaryFolder();
 
-	private final FileScanner sut = new FileScanner();
+	private final RegularFileScanner sut = new RegularFileScanner();
 	private Directory tempDir;
 
 	@Before
 	public void setup()
 	{
-		String tempFolderDir = tempFolder.getRoot().toPath().toString();
-		tempDir = new Directory(tempFolderDir);
+		tempDir = new Directory(tempFolder.getRoot().toPath());
 	}
 
 	@Test
@@ -46,9 +45,10 @@ public class FileScannerTest
 		// given
 
 		// when
-		List<ScannedFile> result = sut.scan(tempDir);
+		sut.scan(tempDir);
 
 		// then
+		List<ScannedFile> result = sut.getScannedFiles();
 		assertThat(result, empty());
 	}
 
@@ -59,9 +59,10 @@ public class FileScannerTest
 		Path file1 = createFileWithContent(tempDir, "file1", "FOO");
 
 		// when
-		List<ScannedFile> result = sut.scan(tempDir);
+		sut.scan(tempDir);
 
 		// then
+		List<ScannedFile> result = sut.getScannedFiles();
 		assertThat(result, hasSize(1));
 		assertThat(result.get(0).equals(file1), is(true));
 	}
@@ -70,13 +71,14 @@ public class FileScannerTest
 	public void scanFindsFileInSubdirectory() throws IOException
 	{
 		// given
-		Path subDir = createSubdirectory(tempDir, "subdir");
+		Directory subDir = createSubdirectory(tempDir, "subdir");
 		Path file1 = createFileWithContent(subDir, "file1", "FOO");
 
 		// when
-		List<ScannedFile> result = sut.scan(tempDir);
+		sut.scan(tempDir);
 
 		// then
+		List<ScannedFile> result = sut.getScannedFiles();
 		assertThat(result, hasSize(1));
 		assertThat(result.get(0).equals(file1), is(true));
 	}
@@ -85,16 +87,37 @@ public class FileScannerTest
 	public void scanFindsFileInDeeperSubdirectory() throws IOException
 	{
 		// given
-		Path subDir = createSubdirectory(tempDir, "subdirA");
-		Path subSubDir = createSubdirectory(subDir, "subdirB");
+		Directory subDir = createSubdirectory(tempDir, "subdirA");
+		Directory subSubDir = createSubdirectory(subDir, "subdirB");
 		Path file1 = createFileWithContent(subSubDir, "file1", "FOO");
 
 		// when
-		List<ScannedFile> result = sut.scan(tempDir);
+		sut.scan(tempDir);
 
 		// then
+		List<ScannedFile> result = sut.getScannedFiles();
 		assertThat(result, hasSize(1));
 		assertThat(result.get(0).equals(file1), is(true));
+	}
+
+	@Test
+	public void multipleScanResultsAccumulate() throws IOException
+	{
+		// given
+		Directory subDirA = createSubdirectory(tempDir, "subdirA");
+		Directory subDirB = createSubdirectory(tempDir, "subdirB");
+		Path file1 = createFileWithContent(subDirA, "file1", "FOO");
+		Path file2 = createFileWithContent(subDirB, "file2", "FOO");
+
+		// when
+		sut.scan(subDirA);
+		sut.scan(subDirB);
+
+		// then
+		List<ScannedFile> result = sut.getScannedFiles();
+		assertThat(result, hasSize(2));
+		assertThat(result.get(0).equals(file1), is(true));
+		assertThat(result.get(1).equals(file2), is(true));
 	}
 
 	@Test
@@ -106,9 +129,10 @@ public class FileScannerTest
 		Path file3 = createFileWithContent(tempDir, "file3", "FOO");
 
 		// when
-		List<ScannedFile> result = sut.scan(tempDir);
+		sut.scan(tempDir);
 
 		// then
+		List<ScannedFile> result = sut.getScannedFiles();
 		assertThat(result.toArray(), arrayContainingInAnyOrder(file1, file2, file3));
 	}
 

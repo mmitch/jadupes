@@ -52,9 +52,9 @@ public class FileHelper
 	 * @throws IOException
 	 *             something went wrong
 	 */
-	public static Path createSubdirectory(Directory directory, String subdir) throws IOException
+	public static Directory createSubdirectory(Directory directory, String subdir) throws IOException
 	{
-		return createSubdirectory(directory.asPath(), subdir);
+		return new Directory(createSubdirectory(directory.asPath(), subdir));
 	}
 
 	/**

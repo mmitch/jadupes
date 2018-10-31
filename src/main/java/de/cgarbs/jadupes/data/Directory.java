@@ -28,6 +28,17 @@ public class Directory
 	}
 
 	/**
+	 * creates a new directory
+	 * 
+	 * @param directory
+	 *            Path representation of the directory
+	 */
+	public Directory(Path directory)
+	{
+		this.directory = directory;
+	}
+
+	/**
 	 * @return this directory as a {@link Path}
 	 */
 	public Path asPath()

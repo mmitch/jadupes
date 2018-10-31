@@ -7,36 +7,47 @@ package de.cgarbs.jadupes.input;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import de.cgarbs.jadupes.data.Directory;
 import de.cgarbs.jadupes.data.ScannedFile;
 
 /**
- * Scans directories for relevant files
+ * Scans directories recursively for regular files
  * 
  * @author Christian Garbs &lt;mitch@cgarbs.de&gt;
  *
  */
-public class FileScanner
+public class RegularFileScanner
 {
+	private final List<ScannedFile> scannedFiles = new ArrayList<>();
+
 	/**
-	 * scan the given directory for relevant files
+	 * scan the given directory for regular files
 	 * 
 	 * @param dir
 	 *            the directory to scan
-	 * @return the found files
 	 * @throws IOException
 	 *             any IO error
 	 */
-	public List<ScannedFile> scan(Directory dir) throws IOException
+	public void scan(Directory dir) throws IOException
 	{
 		Path startPath = dir.asPath();
-		return Files.walk(startPath) //
+		Files.walk(startPath) //
 				.filter(Files::isRegularFile) //
 				.map(ScannedFile::new) //
-				.collect(Collectors.toList());
+				.forEach(scannedFiles::add);
 	}
 
+	/**
+	 * returns the previously scanned files
+	 * 
+	 * @return the scanned files
+	 * @see #scan
+	 */
+	public List<ScannedFile> getScannedFiles()
+	{
+		return scannedFiles;
+	}
 }
