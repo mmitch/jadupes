@@ -15,6 +15,7 @@ import java.nio.file.Path;
 import java.util.stream.Collectors;
 
 import de.cgarbs.jadupes.data.Configuration;
+import de.cgarbs.jadupes.data.Directory;
 
 /**
  * Helper methods regarding Files and Pathes for unit testing.
@@ -41,6 +42,22 @@ public class FileHelper
 	}
 
 	/**
+	 * create a subdirectory
+	 * 
+	 * @param directory
+	 *            where to create the subdirectory
+	 * @param subdir
+	 *            subdirectory name
+	 * @return the subdirectory
+	 * @throws IOException
+	 *             something went wrong
+	 */
+	public static Path createSubdirectory(Directory directory, String subdir) throws IOException
+	{
+		return createSubdirectory(directory.asPath(), subdir);
+	}
+
+	/**
 	 * create a new file with given content
 	 * 
 	 * @param directory
@@ -60,6 +77,24 @@ public class FileHelper
 		writer.write(content);
 		writer.close();
 		return file;
+	}
+
+	/**
+	 * create a new file with given content
+	 * 
+	 * @param directory
+	 *            where to create the file
+	 * @param filename
+	 *            the name of the new file
+	 * @param content
+	 *            the content of the new file
+	 * @return the file
+	 * @throws IOException
+	 *             something went wrong
+	 */
+	public static Path createFileWithContent(Directory directory, String filename, String content) throws IOException
+	{
+		return createFileWithContent(directory.asPath(), filename, content);
 	}
 
 	/**

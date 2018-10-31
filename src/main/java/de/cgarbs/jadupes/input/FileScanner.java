@@ -5,12 +5,12 @@
 package de.cgarbs.jadupes.input;
 
 import java.io.IOException;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import de.cgarbs.jadupes.data.Directory;
 import de.cgarbs.jadupes.data.ScannedFile;
 
 /**
@@ -30,9 +30,9 @@ public class FileScanner
 	 * @throws IOException
 	 *             any IO error
 	 */
-	public List<ScannedFile> scan(String dir) throws IOException
+	public List<ScannedFile> scan(Directory dir) throws IOException
 	{
-		Path startPath = FileSystems.getDefault().getPath(dir);
+		Path startPath = dir.asPath();
 		return Files.walk(startPath) //
 				.filter(Files::isRegularFile) //
 				.map(ScannedFile::new) //

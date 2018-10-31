@@ -21,6 +21,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import de.cgarbs.jadupes.data.Directory;
 import de.cgarbs.jadupes.data.ScannedFile;
 
 @SuppressWarnings("javadoc")
@@ -30,12 +31,13 @@ public class FileScannerTest
 	public TemporaryFolder tempFolder = new TemporaryFolder();
 
 	private final FileScanner sut = new FileScanner();
-	private Path tempDir;
+	private Directory tempDir;
 
 	@Before
 	public void setup()
 	{
-		tempDir = tempFolder.getRoot().toPath();
+		String tempFolderDir = tempFolder.getRoot().toPath().toString();
+		tempDir = new Directory(tempFolderDir);
 	}
 
 	@Test
@@ -44,7 +46,7 @@ public class FileScannerTest
 		// given
 
 		// when
-		List<ScannedFile> result = sut.scan(tempDir.toString());
+		List<ScannedFile> result = sut.scan(tempDir);
 
 		// then
 		assertThat(result, empty());
@@ -57,7 +59,7 @@ public class FileScannerTest
 		Path file1 = createFileWithContent(tempDir, "file1", "FOO");
 
 		// when
-		List<ScannedFile> result = sut.scan(tempDir.toString());
+		List<ScannedFile> result = sut.scan(tempDir);
 
 		// then
 		assertThat(result, hasSize(1));
@@ -72,7 +74,7 @@ public class FileScannerTest
 		Path file1 = createFileWithContent(subDir, "file1", "FOO");
 
 		// when
-		List<ScannedFile> result = sut.scan(tempDir.toString());
+		List<ScannedFile> result = sut.scan(tempDir);
 
 		// then
 		assertThat(result, hasSize(1));
@@ -88,7 +90,7 @@ public class FileScannerTest
 		Path file1 = createFileWithContent(subSubDir, "file1", "FOO");
 
 		// when
-		List<ScannedFile> result = sut.scan(tempDir.toString());
+		List<ScannedFile> result = sut.scan(tempDir);
 
 		// then
 		assertThat(result, hasSize(1));
@@ -104,7 +106,7 @@ public class FileScannerTest
 		Path file3 = createFileWithContent(tempDir, "file3", "FOO");
 
 		// when
-		List<ScannedFile> result = sut.scan(tempDir.toString());
+		List<ScannedFile> result = sut.scan(tempDir);
 
 		// then
 		assertThat(result.toArray(), arrayContainingInAnyOrder(file1, file2, file3));
