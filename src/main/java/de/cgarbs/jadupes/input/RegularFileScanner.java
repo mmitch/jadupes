@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import de.cgarbs.jadupes.data.Directory;
 import de.cgarbs.jadupes.data.SingleFile;
@@ -46,8 +47,8 @@ public class RegularFileScanner
 	 * @return the scanned files
 	 * @see #scan
 	 */
-	public List<SingleFile> getScannedFiles()
+	public Stream<SingleFile> getScannedFiles()
 	{
-		return scannedFiles;
+		return scannedFiles.stream();
 	}
 }
