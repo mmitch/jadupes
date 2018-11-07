@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.cgarbs.jadupes.data.Directory;
-import de.cgarbs.jadupes.data.ScannedFile;
+import de.cgarbs.jadupes.data.SingleFile;
 
 /**
  * Scans directories recursively for regular files
@@ -21,7 +21,7 @@ import de.cgarbs.jadupes.data.ScannedFile;
  */
 public class RegularFileScanner
 {
-	private final List<ScannedFile> scannedFiles = new ArrayList<>();
+	private final List<SingleFile> scannedFiles = new ArrayList<>();
 
 	/**
 	 * scan the given directory for regular files
@@ -36,7 +36,7 @@ public class RegularFileScanner
 		Path startPath = dir.asPath();
 		Files.walk(startPath) //
 				.filter(Files::isRegularFile) //
-				.map(ScannedFile::new) //
+				.map(SingleFile::new) //
 				.forEach(scannedFiles::add);
 	}
 
@@ -46,7 +46,7 @@ public class RegularFileScanner
 	 * @return the scanned files
 	 * @see #scan
 	 */
-	public List<ScannedFile> getScannedFiles()
+	public List<SingleFile> getScannedFiles()
 	{
 		return scannedFiles;
 	}

@@ -21,7 +21,7 @@ import de.cgarbs.jadupes.test.VisibleForTesting;
  * @author Christian Garbs &lt;mitch@cgarbs.de&gt;
  *
  */
-public class ScannedFile
+public class SingleFile
 {
 	private final List<Path> hardlinks = new ArrayList<>();
 	private final long size;
@@ -30,7 +30,7 @@ public class ScannedFile
 	private final long device;
 
 	@VisibleForTesting
-	protected ScannedFile(Path path, long size, Object fileKey)
+	protected SingleFile(Path path, long size, Object fileKey)
 	{
 		this.size = size;
 		this.fileKey = fileKey;
@@ -46,7 +46,7 @@ public class ScannedFile
 	 * @param path
 	 *            the Path of the file (directory + filename)
 	 */
-	public ScannedFile(Path path)
+	public SingleFile(Path path)
 	{
 		try
 		{

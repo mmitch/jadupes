@@ -15,7 +15,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.cgarbs.jadupes.data.ScannedFile;
+import de.cgarbs.jadupes.data.SingleFile;
 import de.cgarbs.jadupes.test.PrintStreamRecorder;
 
 @SuppressWarnings("javadoc")
@@ -34,7 +34,7 @@ public class GroupPrinterTest
 	public void emptyListPrintsNothing()
 	{
 		// given
-		List<ScannedFile> emptyList = Collections.emptyList();
+		List<SingleFile> emptyList = Collections.emptyList();
 
 		// when
 		printer_underTest.processGroup(emptyList);
@@ -47,9 +47,9 @@ public class GroupPrinterTest
 	public void filenamesArePrintedFromList()
 	{
 		// given
-		ScannedFile file1 = new FakeScannedFile("file_1");
-		ScannedFile file2 = new FakeScannedFile("file_2");
-		List<ScannedFile> fileGroup = Arrays.asList(file1, file2);
+		SingleFile file1 = new FakeScannedFile("file_1");
+		SingleFile file2 = new FakeScannedFile("file_2");
+		List<SingleFile> fileGroup = Arrays.asList(file1, file2);
 
 		// when
 		printer_underTest.processGroup(fileGroup);
@@ -64,8 +64,8 @@ public class GroupPrinterTest
 	public void multipleGroupsAreSeparatedByAnEmptyLine()
 	{
 		// given
-		List<ScannedFile> fileGroup1 = Collections.singletonList(new FakeScannedFile("file_1"));
-		List<ScannedFile> fileGroup2 = Collections.singletonList(new FakeScannedFile("file_2"));
+		List<SingleFile> fileGroup1 = Collections.singletonList(new FakeScannedFile("file_1"));
+		List<SingleFile> fileGroup2 = Collections.singletonList(new FakeScannedFile("file_2"));
 
 		// when
 		printer_underTest.processGroup(fileGroup1);
@@ -94,9 +94,9 @@ public class GroupPrinterTest
 	public void withFileGroupsFinalizeDoesNothing()
 	{
 		// given
-		ScannedFile file1 = new FakeScannedFile("file_1");
-		ScannedFile file2 = new FakeScannedFile("file_2");
-		List<ScannedFile> fileGroup = Arrays.asList(file1, file2);
+		SingleFile file1 = new FakeScannedFile("file_1");
+		SingleFile file2 = new FakeScannedFile("file_2");
+		List<SingleFile> fileGroup = Arrays.asList(file1, file2);
 		printer_underTest.processGroup(fileGroup);
 		recorder.reset();
 
@@ -108,7 +108,7 @@ public class GroupPrinterTest
 		assertThat(recorder.getLinesLeft(), is(0));
 	}
 
-	private class FakeScannedFile extends ScannedFile
+	private class FakeScannedFile extends SingleFile
 	{
 
 		public FakeScannedFile(String filename)

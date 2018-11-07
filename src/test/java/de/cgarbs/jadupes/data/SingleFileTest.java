@@ -21,7 +21,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 
 @SuppressWarnings("javadoc")
-public class ScannedFileTest
+public class SingleFileTest
 {
 	@Rule
 	public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -44,7 +44,7 @@ public class ScannedFileTest
 		Path somePath = createFileWithContent(tempDir, "filename", "FOO");
 
 		// when
-		ScannedFile scannedFile = new ScannedFile(somePath);
+		SingleFile scannedFile = new SingleFile(somePath);
 
 		// then
 		assertThat(scannedFile.getNames().findFirst().get(), is(somePath));
@@ -57,7 +57,7 @@ public class ScannedFileTest
 		Path file = createFileWithContent(tempDir, "file", "some content");
 
 		// when
-		ScannedFile scannedFile = new ScannedFile(file);
+		SingleFile scannedFile = new SingleFile(file);
 
 		// then
 		assertThat(scannedFile.getSize(), is(Files.size(file)));
@@ -71,7 +71,7 @@ public class ScannedFileTest
 
 		// when
 		exception.expect(RuntimeException.class);
-		new ScannedFile(madeUpFilename);
+		new SingleFile(madeUpFilename);
 
 		// then
 		fail("no exception thrown!");
@@ -84,8 +84,8 @@ public class ScannedFileTest
 		Path file1 = createFileWithContent(tempDir, "file1", "FOO");
 		Path file2 = createFileWithContent(tempDir, "file2", "BAR");
 
-		ScannedFile scannedFile1 = new ScannedFile(file1);
-		ScannedFile scannedFile2 = new ScannedFile(file2);
+		SingleFile scannedFile1 = new SingleFile(file1);
+		SingleFile scannedFile2 = new SingleFile(file2);
 
 		// when
 		Object fileKey1 = scannedFile1.getFileKey();
@@ -102,8 +102,8 @@ public class ScannedFileTest
 		Path file1 = createFileWithContent(tempDir, "file1", "FOO");
 		Path file2 = Files.createLink(tempDir.resolve("file2"), file1);
 
-		ScannedFile scannedFile1 = new ScannedFile(file1);
-		ScannedFile scannedFile2 = new ScannedFile(file2);
+		SingleFile scannedFile1 = new SingleFile(file1);
+		SingleFile scannedFile2 = new SingleFile(file2);
 
 		// when
 		Object fileKey1 = scannedFile1.getFileKey();
@@ -120,7 +120,7 @@ public class ScannedFileTest
 		Path file = createFileWithContent(tempDir, "file", "FOO");
 
 		// then
-		ScannedFile scannedFile = new ScannedFile(file);
+		SingleFile scannedFile = new SingleFile(file);
 
 		// then
 		assertThat(scannedFile.getHardlinkCount(), is(1));
@@ -134,7 +134,7 @@ public class ScannedFileTest
 		Files.createLink(tempDir.resolve("hardlink"), file);
 
 		// then
-		ScannedFile scannedFile = new ScannedFile(file);
+		SingleFile scannedFile = new SingleFile(file);
 
 		// then
 		assertThat(scannedFile.getHardlinkCount(), is(2));
@@ -148,8 +148,8 @@ public class ScannedFileTest
 		Path file2 = createFileWithContent(tempDir, "file2", "FOO");
 
 		// then
-		ScannedFile scannedFile1 = new ScannedFile(file1);
-		ScannedFile scannedFile2 = new ScannedFile(file2);
+		SingleFile scannedFile1 = new SingleFile(file1);
+		SingleFile scannedFile2 = new SingleFile(file2);
 
 		// then
 		assertThat(scannedFile1.getDevice(), is(scannedFile2.getDevice()));

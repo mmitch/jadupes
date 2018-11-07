@@ -8,7 +8,7 @@ import java.io.PrintStream;
 import java.nio.file.Path;
 import java.util.List;
 
-import de.cgarbs.jadupes.data.ScannedFile;
+import de.cgarbs.jadupes.data.SingleFile;
 import de.cgarbs.jadupes.test.VisibleForTesting;
 
 /**
@@ -25,7 +25,7 @@ public class GroupPrinter implements OutputAction
 	private boolean firstGroup = true;
 
 	@Override
-	public void processGroup(List<ScannedFile> files)
+	public void processGroup(List<SingleFile> files)
 	{
 		if (firstGroup)
 		{
@@ -37,7 +37,7 @@ public class GroupPrinter implements OutputAction
 		}
 
 		files.stream() //
-				.flatMap(ScannedFile::getNames) //
+				.flatMap(SingleFile::getNames) //
 				.map(Path::toString) //
 				.forEach(output::println);
 	}

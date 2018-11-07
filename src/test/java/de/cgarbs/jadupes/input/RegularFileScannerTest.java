@@ -24,7 +24,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import de.cgarbs.jadupes.data.Directory;
-import de.cgarbs.jadupes.data.ScannedFile;
+import de.cgarbs.jadupes.data.SingleFile;
 
 @SuppressWarnings("javadoc")
 public class RegularFileScannerTest
@@ -50,7 +50,7 @@ public class RegularFileScannerTest
 		sut.scan(tempDir);
 
 		// then
-		List<ScannedFile> result = sut.getScannedFiles();
+		List<SingleFile> result = sut.getScannedFiles();
 		assertThat(result, empty());
 	}
 
@@ -64,7 +64,7 @@ public class RegularFileScannerTest
 		sut.scan(tempDir);
 
 		// then
-		List<ScannedFile> result = sut.getScannedFiles();
+		List<SingleFile> result = sut.getScannedFiles();
 		assertThat(result, hasSize(1));
 		assertSameFile(result.get(0), file1);
 	}
@@ -80,7 +80,7 @@ public class RegularFileScannerTest
 		sut.scan(tempDir);
 
 		// then
-		List<ScannedFile> result = sut.getScannedFiles();
+		List<SingleFile> result = sut.getScannedFiles();
 		assertThat(result, hasSize(1));
 		assertSameFile(result.get(0), file1);
 	}
@@ -97,7 +97,7 @@ public class RegularFileScannerTest
 		sut.scan(tempDir);
 
 		// then
-		List<ScannedFile> result = sut.getScannedFiles();
+		List<SingleFile> result = sut.getScannedFiles();
 		assertThat(result, hasSize(1));
 		assertSameFile(result.get(0), file1);
 	}
@@ -116,7 +116,7 @@ public class RegularFileScannerTest
 		sut.scan(subDirB);
 
 		// then
-		List<ScannedFile> result = sut.getScannedFiles();
+		List<SingleFile> result = sut.getScannedFiles();
 		assertThat(result, hasSize(2));
 		assertSameFile(result.get(0), file1);
 		assertSameFile(result.get(1), file2);
@@ -134,7 +134,7 @@ public class RegularFileScannerTest
 		sut.scan(tempDir);
 
 		// then
-		List<ScannedFile> result = sut.getScannedFiles();
+		List<SingleFile> result = sut.getScannedFiles();
 		assertSameFiles(result, file1, file2, file3);
 	}
 
@@ -144,10 +144,10 @@ public class RegularFileScannerTest
 	 * helper methods
 	 */
 
-	private static void assertSameFiles(List<ScannedFile> fileList1, Path... fileList2)
+	private static void assertSameFiles(List<SingleFile> fileList1, Path... fileList2)
 	{
 		Object[] fileKeys1 = fileList1.stream() //
-				.map(ScannedFile::getFileKey) //
+				.map(SingleFile::getFileKey) //
 				.toArray();
 
 		Object[] fileKeys2 = Arrays.stream(fileList2) //
@@ -157,7 +157,7 @@ public class RegularFileScannerTest
 		assertThat(fileKeys1, arrayContainingInAnyOrder(fileKeys2));
 	}
 
-	private static void assertSameFile(ScannedFile file1, Path file2) throws IOException
+	private static void assertSameFile(SingleFile file1, Path file2) throws IOException
 	{
 		assertThat(file1.getFileKey(), is(getFileKey(file2)));
 	}
