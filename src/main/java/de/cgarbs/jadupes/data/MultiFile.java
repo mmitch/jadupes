@@ -4,6 +4,8 @@
  */
 package de.cgarbs.jadupes.data;
 
+import static java.util.stream.Collectors.toList;
+
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +24,13 @@ public class MultiFile extends FileBase
 	private MultiFile(Path path, long size, Object fileKey, int nlink, long device)
 	{
 		super(size, fileKey, nlink, device);
+		hardlinks.add(path);
+	}
 
-		addHardlink(path);
+	private MultiFile(List<Path> paths, long size, Object fileKey, int nlink, long device)
+	{
+		super(size, fileKey, nlink, device);
+		hardlinks.addAll(paths);
 	}
 
 	/**
@@ -45,6 +52,28 @@ public class MultiFile extends FileBase
 	}
 
 	/**
+	 * Merge the names (hardlinks) {@link MultiFile}s that refer to the same
+	 * file into a new {@link MultiFile}.
+	 * 
+	 * @param MultiFileA
+	 *            the one {@link MultiFile}
+	 * @param MultiFileB
+	 *            the other {@link MultiFile}
+	 * @return new {@link MultiFile} with the merged names (hardlinks) from both
+	 *         sources
+	 */
+	public static MultiFile merge(MultiFile MultiFileA, MultiFile MultiFileB)
+	{
+		assert (MultiFileA.getSize() == MultiFileB.getSize());
+		assert (MultiFileA.getFileKey().equals(MultiFileB.getFileKey()));
+		assert (MultiFileA.getHardlinkCount() == MultiFileB.getHardlinkCount());
+		assert (MultiFileA.getDevice() == MultiFileB.getDevice());
+
+		List<Path> combinedPaths = Stream.concat(MultiFileA.getNames(), MultiFileB.getNames()).collect(toList());
+		return new MultiFile(combinedPaths, MultiFileA.getSize(), MultiFileA.getFileKey(), MultiFileA.getHardlinkCount(), MultiFileA.getDevice());
+	}
+
+	/**
 	 * A file with multiple hardlinks has multiple names.
 	 * Only the names from scanned directories are known, so {@link #getNames()}
 	 * might contain fewer results than {@link #getHardlinkCount()}.
@@ -54,11 +83,6 @@ public class MultiFile extends FileBase
 	public Stream<Path> getNames()
 	{
 		return hardlinks.stream();
-	}
-
-	private void addHardlink(Path path)
-	{
-		hardlinks.add(path);
 	}
 
 }
