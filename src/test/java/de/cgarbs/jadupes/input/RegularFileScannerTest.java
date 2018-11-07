@@ -43,7 +43,7 @@ public class RegularFileScannerTest
 	}
 
 	@Test
-	public void scanFindsNoFilesInEmptyDirectory() throws IOException
+	public void scanFindsNoFilesInEmptyDirectory()
 	{
 		// given
 

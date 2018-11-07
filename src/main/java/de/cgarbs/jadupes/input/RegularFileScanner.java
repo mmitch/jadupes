@@ -29,16 +29,21 @@ public class RegularFileScanner
 	 * 
 	 * @param dir
 	 *            the directory to scan
-	 * @throws IOException
-	 *             any IO error
 	 */
-	public void scan(Directory dir) throws IOException
+	public void scan(Directory dir)
 	{
-		Path startPath = dir.asPath();
-		Files.walk(startPath) //
-				.filter(Files::isRegularFile) //
-				.map(SingleFile::of) //
-				.forEach(scannedFiles::add);
+		try
+		{
+			Path startPath = dir.asPath();
+			Files.walk(startPath) //
+					.filter(Files::isRegularFile) //
+					.map(SingleFile::of) //
+					.forEach(scannedFiles::add);
+		} catch (IOException e)
+		{
+			// convert to RuntimeException because of Stream :-/
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**
