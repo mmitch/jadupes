@@ -6,6 +6,7 @@ package de.cgarbs.jadupes.input;
 
 import static de.cgarbs.jadupes.test.FileHelper.createFileWithContent;
 import static de.cgarbs.jadupes.test.FileHelper.createSubdirectory;
+import static java.util.stream.Collectors.toList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.collection.IsArrayContainingInAnyOrder.arrayContainingInAnyOrder;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
@@ -17,7 +18,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -51,7 +51,7 @@ public class RegularFileScannerTest
 		sut.scan(tempDir);
 
 		// then
-		List<SingleFile> result = sut.getScannedFiles().collect(Collectors.toList());
+		List<SingleFile> result = sut.getScannedFiles().collect(toList());
 		assertThat(result, empty());
 	}
 
@@ -65,7 +65,7 @@ public class RegularFileScannerTest
 		sut.scan(tempDir);
 
 		// then
-		List<SingleFile> result = sut.getScannedFiles().collect(Collectors.toList());
+		List<SingleFile> result = sut.getScannedFiles().collect(toList());
 		assertThat(result, hasSize(1));
 		assertSameFile(result.get(0), file1);
 	}
@@ -81,7 +81,7 @@ public class RegularFileScannerTest
 		sut.scan(tempDir);
 
 		// then
-		List<SingleFile> result = sut.getScannedFiles().collect(Collectors.toList());
+		List<SingleFile> result = sut.getScannedFiles().collect(toList());
 		assertThat(result, hasSize(1));
 		assertSameFile(result.get(0), file1);
 	}
@@ -98,7 +98,7 @@ public class RegularFileScannerTest
 		sut.scan(tempDir);
 
 		// then
-		List<SingleFile> result = sut.getScannedFiles().collect(Collectors.toList());
+		List<SingleFile> result = sut.getScannedFiles().collect(toList());
 		assertThat(result, hasSize(1));
 		assertSameFile(result.get(0), file1);
 	}
@@ -117,7 +117,7 @@ public class RegularFileScannerTest
 		sut.scan(subDirB);
 
 		// then
-		List<SingleFile> result = sut.getScannedFiles().collect(Collectors.toList());
+		List<SingleFile> result = sut.getScannedFiles().collect(toList());
 		assertThat(result, hasSize(2));
 		assertSameFile(result.get(0), file1);
 		assertSameFile(result.get(1), file2);
@@ -135,7 +135,7 @@ public class RegularFileScannerTest
 		sut.scan(tempDir);
 
 		// then
-		List<SingleFile> result = sut.getScannedFiles().collect(Collectors.toList());
+		List<SingleFile> result = sut.getScannedFiles().collect(toList());
 		assertSameFiles(result, file1, file2, file3);
 	}
 
