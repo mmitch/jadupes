@@ -13,7 +13,9 @@ import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Before;
@@ -64,7 +66,7 @@ public class RegularFileScannerTest
 		// then
 		List<ScannedFile> result = sut.getScannedFiles();
 		assertThat(result, hasSize(1));
-		assertThat(result.get(0).equals(file1), is(true));
+		assertSameFile(result.get(0), file1);
 	}
 
 	@Test
@@ -80,7 +82,7 @@ public class RegularFileScannerTest
 		// then
 		List<ScannedFile> result = sut.getScannedFiles();
 		assertThat(result, hasSize(1));
-		assertThat(result.get(0).equals(file1), is(true));
+		assertSameFile(result.get(0), file1);
 	}
 
 	@Test
@@ -97,7 +99,7 @@ public class RegularFileScannerTest
 		// then
 		List<ScannedFile> result = sut.getScannedFiles();
 		assertThat(result, hasSize(1));
-		assertThat(result.get(0).equals(file1), is(true));
+		assertSameFile(result.get(0), file1);
 	}
 
 	@Test
@@ -116,8 +118,8 @@ public class RegularFileScannerTest
 		// then
 		List<ScannedFile> result = sut.getScannedFiles();
 		assertThat(result, hasSize(2));
-		assertThat(result.get(0).equals(file1), is(true));
-		assertThat(result.get(1).equals(file2), is(true));
+		assertSameFile(result.get(0), file1);
+		assertSameFile(result.get(1), file2);
 	}
 
 	@Test
@@ -133,8 +135,42 @@ public class RegularFileScannerTest
 
 		// then
 		List<ScannedFile> result = sut.getScannedFiles();
-		assertThat(result.toArray(), arrayContainingInAnyOrder(file1, file2, file3));
+		assertSameFiles(result, file1, file2, file3);
 	}
 
-	// TODO: don't follow symlinks
+	// FIXME: test for "don't follow symlinks"
+
+	/*
+	 * helper methods
+	 */
+
+	private static void assertSameFiles(List<ScannedFile> fileList1, Path... fileList2)
+	{
+		Object[] fileKeys1 = fileList1.stream() //
+				.map(ScannedFile::getFileKey) //
+				.toArray();
+
+		Object[] fileKeys2 = Arrays.stream(fileList2) //
+				.map(RegularFileScannerTest::getFileKey) //
+				.toArray();
+
+		assertThat(fileKeys1, arrayContainingInAnyOrder(fileKeys2));
+	}
+
+	private static void assertSameFile(ScannedFile file1, Path file2) throws IOException
+	{
+		assertThat(file1.getFileKey(), is(getFileKey(file2)));
+	}
+
+	private static Object getFileKey(Path file)
+	{
+		try
+		{
+			return Files.readAttributes(file, "unix:fileKey").get("fileKey");
+		} catch (IOException e)
+		{
+			// wrap to RuntimeException because of Stream :-/
+			throw new RuntimeException(e);
+		}
+	}
 }

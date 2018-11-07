@@ -8,54 +8,59 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import de.cgarbs.jadupes.test.VisibleForTesting;
 
 /**
- * a relevant file
+ * a single file
  * 
  * @author Christian Garbs &lt;mitch@cgarbs.de&gt;
  *
  */
 public class ScannedFile
 {
-	private final Path file;
+	private final List<Path> hardlinks = new ArrayList<>();
 	private final long size;
 	private final Object fileKey;
 	private final int nlink;
 	private final long device;
 
 	@VisibleForTesting
-	protected ScannedFile(Path file, long size, Object fileKey)
+	protected ScannedFile(Path path, long size, Object fileKey)
 	{
-		this.file = file;
 		this.size = size;
 		this.fileKey = fileKey;
 		this.nlink = 1;
 		this.device = 0;
+
+		addHardlink(path);
 	}
 
 	/**
 	 * creates a new scanned file
 	 * 
-	 * @param file
+	 * @param path
 	 *            the Path of the file (directory + filename)
 	 */
-	public ScannedFile(Path file)
+	public ScannedFile(Path path)
 	{
 		try
 		{
-			this.file = file;
 			// TODO: figure out what happens when unix: is not available and
 			// what to do then. Perhaps check once on startup if unix: is
 			// available and then always do this or that (perhaps use
-			// ScannedFile subclasses?)
-			Map<String, Object> attributes = Files.readAttributes(file, "unix:size,fileKey,nlink,dev");
+			// SingleFile subclasses?)
+			Map<String, Object> attributes = Files.readAttributes(path, "unix:size,fileKey,nlink,dev");
 			this.size = Long.parseLong(attributes.get("size").toString());
 			this.fileKey = attributes.get("fileKey");
 			this.nlink = Integer.parseInt(attributes.get("nlink").toString());
 			this.device = Long.parseLong(attributes.get("dev").toString());
+
+			addHardlink(path);
 		} catch (IOException e)
 		{
 			// Rethrow as unchecked exception because of Stream
@@ -65,11 +70,15 @@ public class ScannedFile
 	}
 
 	/**
-	 * @return the Path of this file (directory + filename)
+	 * A file with multiple hardlinks has multiple names.
+	 * Only the names from scanned directories are known, so {@link #getNames()}
+	 * might contain fewer results than {@link #getHardlinkCount()}.
+	 * 
+	 * @return the known names of this file (directory + filename)
 	 */
-	public Path getFile()
+	public Stream<Path> getNames()
 	{
-		return file;
+		return hardlinks.stream();
 	}
 
 	/**
@@ -81,7 +90,11 @@ public class ScannedFile
 	}
 
 	/**
-	 * @return the number of hardlinks this file shares
+	 * Only the names from scanned directories are known, so
+	 * {@link #getHardlinkCount()}
+	 * might give a bigger result than {@link #getNames()}.
+	 * 
+	 * @return the total number of hardlinks (names) this file shares
 	 */
 	public int getHardlinkCount()
 	{
@@ -102,31 +115,17 @@ public class ScannedFile
 		return fileKey;
 	}
 
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (obj == null)
-		{
-			return false;
-		}
-		if (obj == this)
-		{
-			return true;
-		}
-		if (obj instanceof Path)
-		{
-			return file.equals(obj);
-		}
-		if (obj instanceof ScannedFile)
-		{
-			ScannedFile other = (ScannedFile) obj;
-			return file.equals(other.file);
-		}
-		return false;
-	}
-
+	/**
+	 * @return the device/filesystem this file is on
+	 */
 	public long getDevice()
 	{
 		return device;
 	}
+
+	private void addHardlink(Path path)
+	{
+		hardlinks.add(path);
+	}
+
 }

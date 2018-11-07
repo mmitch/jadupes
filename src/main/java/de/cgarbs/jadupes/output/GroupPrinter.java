@@ -37,7 +37,7 @@ public class GroupPrinter implements OutputAction
 		}
 
 		files.stream() //
-				.map(ScannedFile::getFile) //
+				.flatMap(ScannedFile::getNames) //
 				.map(Path::toString) //
 				.forEach(output::println);
 	}
