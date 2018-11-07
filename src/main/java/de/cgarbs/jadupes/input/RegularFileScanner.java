@@ -36,7 +36,7 @@ public class RegularFileScanner
 		Path startPath = dir.asPath();
 		Files.walk(startPath) //
 				.filter(Files::isRegularFile) //
-				.map(SingleFile::new) //
+				.map(SingleFile::of) //
 				.forEach(scannedFiles::add);
 	}
 

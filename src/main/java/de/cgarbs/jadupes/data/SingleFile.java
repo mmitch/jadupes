@@ -7,46 +7,41 @@ package de.cgarbs.jadupes.data;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import de.cgarbs.jadupes.test.VisibleForTesting;
 
 /**
- * a single file
+ * a file with a single filename
  * 
  * @author Christian Garbs &lt;mitch@cgarbs.de&gt;
  *
  */
-public class SingleFile
+public class SingleFile extends FileBase
 {
-	private final List<Path> hardlinks = new ArrayList<>();
-	private final long size;
-	private final Object fileKey;
-	private final int nlink;
-	private final long device;
+	private final Path path;
 
 	@VisibleForTesting
 	protected SingleFile(Path path, long size, Object fileKey)
 	{
-		this.size = size;
-		this.fileKey = fileKey;
-		this.nlink = 1;
-		this.device = 0;
+		this(path, size, fileKey, 1, 0);
+	}
 
-		addHardlink(path);
+	private SingleFile(Path path, long size, Object fileKey, int nlink, long device)
+	{
+		super(size, fileKey, nlink, device);
+		this.path = path;
 	}
 
 	/**
-	 * creates a new scanned file
+	 * Creates a new {@link SingleFile}. Reads and stores the relevant file
+	 * attributes from the filesystem.
 	 * 
 	 * @param path
 	 *            the Path of the file (directory + filename)
+	 * @return the new {@link SingleFile}
 	 */
-	public SingleFile(Path path)
+	public static SingleFile of(Path path)
 	{
 		try
 		{
@@ -55,12 +50,12 @@ public class SingleFile
 			// available and then always do this or that (perhaps use
 			// SingleFile subclasses?)
 			Map<String, Object> attributes = Files.readAttributes(path, "unix:size,fileKey,nlink,dev");
-			this.size = Long.parseLong(attributes.get("size").toString());
-			this.fileKey = attributes.get("fileKey");
-			this.nlink = Integer.parseInt(attributes.get("nlink").toString());
-			this.device = Long.parseLong(attributes.get("dev").toString());
+			long size = Long.parseLong(attributes.get("size").toString());
+			Object fileKey = attributes.get("fileKey");
+			int nlink = Integer.parseInt(attributes.get("nlink").toString());
+			long device = Long.parseLong(attributes.get("dev").toString());
 
-			addHardlink(path);
+			return new SingleFile(path, size, fileKey, nlink, device);
 		} catch (IOException e)
 		{
 			// Rethrow as unchecked exception because of Stream
@@ -70,62 +65,10 @@ public class SingleFile
 	}
 
 	/**
-	 * A file with multiple hardlinks has multiple names.
-	 * Only the names from scanned directories are known, so {@link #getNames()}
-	 * might contain fewer results than {@link #getHardlinkCount()}.
-	 * 
-	 * @return the known names of this file (directory + filename)
+	 * @return the name of this file (directory + filename)
 	 */
-	public Stream<Path> getNames()
+	public Path getName()
 	{
-		return hardlinks.stream();
+		return path;
 	}
-
-	/**
-	 * @return the size of this file
-	 */
-	public long getSize()
-	{
-		return size;
-	}
-
-	/**
-	 * Only the names from scanned directories are known, so
-	 * {@link #getHardlinkCount()}
-	 * might give a bigger result than {@link #getNames()}.
-	 * 
-	 * @return the total number of hardlinks (names) this file shares
-	 */
-	public int getHardlinkCount()
-	{
-		return nlink;
-	}
-
-	/**
-	 * A file key is something unique to every file except for hardlinked files
-	 * or the like.
-	 * Under POSIX, it's something like a <code>device:inode</code> pair.
-	 * 
-	 * @return the file key of this file
-	 * 
-	 * @see BasicFileAttributes#fileKey()
-	 */
-	public Object getFileKey()
-	{
-		return fileKey;
-	}
-
-	/**
-	 * @return the device/filesystem this file is on
-	 */
-	public long getDevice()
-	{
-		return device;
-	}
-
-	private void addHardlink(Path path)
-	{
-		hardlinks.add(path);
-	}
-
 }

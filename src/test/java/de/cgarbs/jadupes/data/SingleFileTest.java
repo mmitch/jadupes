@@ -44,10 +44,10 @@ public class SingleFileTest
 		Path somePath = createFileWithContent(tempDir, "filename", "FOO");
 
 		// when
-		SingleFile scannedFile = new SingleFile(somePath);
+		SingleFile scannedFile = SingleFile.of(somePath);
 
 		// then
-		assertThat(scannedFile.getNames().findFirst().get(), is(somePath));
+		assertThat(scannedFile.getName(), is(somePath));
 	}
 
 	@Test
@@ -57,7 +57,7 @@ public class SingleFileTest
 		Path file = createFileWithContent(tempDir, "file", "some content");
 
 		// when
-		SingleFile scannedFile = new SingleFile(file);
+		SingleFile scannedFile = SingleFile.of(file);
 
 		// then
 		assertThat(scannedFile.getSize(), is(Files.size(file)));
@@ -71,7 +71,7 @@ public class SingleFileTest
 
 		// when
 		exception.expect(RuntimeException.class);
-		new SingleFile(madeUpFilename);
+		SingleFile.of(madeUpFilename);
 
 		// then
 		fail("no exception thrown!");
@@ -84,8 +84,8 @@ public class SingleFileTest
 		Path file1 = createFileWithContent(tempDir, "file1", "FOO");
 		Path file2 = createFileWithContent(tempDir, "file2", "BAR");
 
-		SingleFile scannedFile1 = new SingleFile(file1);
-		SingleFile scannedFile2 = new SingleFile(file2);
+		SingleFile scannedFile1 = SingleFile.of(file1);
+		SingleFile scannedFile2 = SingleFile.of(file2);
 
 		// when
 		Object fileKey1 = scannedFile1.getFileKey();
@@ -102,8 +102,8 @@ public class SingleFileTest
 		Path file1 = createFileWithContent(tempDir, "file1", "FOO");
 		Path file2 = Files.createLink(tempDir.resolve("file2"), file1);
 
-		SingleFile scannedFile1 = new SingleFile(file1);
-		SingleFile scannedFile2 = new SingleFile(file2);
+		SingleFile scannedFile1 = SingleFile.of(file1);
+		SingleFile scannedFile2 = SingleFile.of(file2);
 
 		// when
 		Object fileKey1 = scannedFile1.getFileKey();
@@ -120,7 +120,7 @@ public class SingleFileTest
 		Path file = createFileWithContent(tempDir, "file", "FOO");
 
 		// then
-		SingleFile scannedFile = new SingleFile(file);
+		SingleFile scannedFile = SingleFile.of(file);
 
 		// then
 		assertThat(scannedFile.getHardlinkCount(), is(1));
@@ -134,7 +134,7 @@ public class SingleFileTest
 		Files.createLink(tempDir.resolve("hardlink"), file);
 
 		// then
-		SingleFile scannedFile = new SingleFile(file);
+		SingleFile scannedFile = SingleFile.of(file);
 
 		// then
 		assertThat(scannedFile.getHardlinkCount(), is(2));
@@ -148,8 +148,8 @@ public class SingleFileTest
 		Path file2 = createFileWithContent(tempDir, "file2", "FOO");
 
 		// then
-		SingleFile scannedFile1 = new SingleFile(file1);
-		SingleFile scannedFile2 = new SingleFile(file2);
+		SingleFile scannedFile1 = SingleFile.of(file1);
+		SingleFile scannedFile2 = SingleFile.of(file2);
 
 		// then
 		assertThat(scannedFile1.getDevice(), is(scannedFile2.getDevice()));
