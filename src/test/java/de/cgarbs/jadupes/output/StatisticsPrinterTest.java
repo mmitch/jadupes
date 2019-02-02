@@ -14,7 +14,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.cgarbs.jadupes.data.SingleFile;
+import de.cgarbs.jadupes.data.UniquelyNamedFile;
 import de.cgarbs.jadupes.test.PrintStreamRecorder;
 
 @SuppressWarnings("javadoc")
@@ -48,7 +48,7 @@ public class StatisticsPrinterTest
 	public void statisticsForOneGroupWithTwoFiles()
 	{
 		// given
-		List<SingleFile> group = Arrays.asList(new FakeScannedFile(100), new FakeScannedFile(100));
+		List<UniquelyNamedFile> group = Arrays.asList(new FakeScannedFile(100), new FakeScannedFile(100));
 		printer_underTest.processGroup(group);
 
 		// when
@@ -65,8 +65,8 @@ public class StatisticsPrinterTest
 	public void statisticsForTwoGroupsWithFiveFiles()
 	{
 		// given
-		List<SingleFile> group1 = Arrays.asList(new FakeScannedFile(100), new FakeScannedFile(100), new FakeScannedFile(100));
-		List<SingleFile> group2 = Arrays.asList(new FakeScannedFile(2000), new FakeScannedFile(2000));
+		List<UniquelyNamedFile> group1 = Arrays.asList(new FakeScannedFile(100), new FakeScannedFile(100), new FakeScannedFile(100));
+		List<UniquelyNamedFile> group2 = Arrays.asList(new FakeScannedFile(2000), new FakeScannedFile(2000));
 		printer_underTest.processGroup(group1);
 		printer_underTest.processGroup(group2);
 
@@ -84,7 +84,7 @@ public class StatisticsPrinterTest
 	public void alreadyHardlinkedFilesDontCountAsToBeDeduplicated()
 	{
 		// given
-		List<SingleFile> group = Arrays.asList( //
+		List<UniquelyNamedFile> group = Arrays.asList( //
 				new FakeScannedFile(100, "file-key"), //
 				new FakeScannedFile(100, "file-key"), //
 				new FakeScannedFile(100, "DIFFERENT-FILE-KEY") //
@@ -103,7 +103,7 @@ public class StatisticsPrinterTest
 		assertThat(recorder.getNextLine(), is("1 files using 100 bytes to be deduplicated"));
 	}
 
-	private static class FakeScannedFile extends SingleFile
+	private static class FakeScannedFile extends UniquelyNamedFile
 	{
 		private static int fileKey = 0;
 

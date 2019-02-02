@@ -9,7 +9,7 @@ import java.math.BigInteger;
 import java.util.Collection;
 import java.util.List;
 
-import de.cgarbs.jadupes.data.SingleFile;
+import de.cgarbs.jadupes.data.UniquelyNamedFile;
 import de.cgarbs.jadupes.filter.BucketList;
 import de.cgarbs.jadupes.test.VisibleForTesting;
 
@@ -31,13 +31,13 @@ public class StatisticsPrinter implements OutputAction
 	PrintStream output = System.out;
 
 	@Override
-	public void processGroup(List<SingleFile> files)
+	public void processGroup(List<UniquelyNamedFile> files)
 	{
 		// all files of a group have the same size
 		BigInteger fileSize = BigInteger.valueOf(files.get(0).getSize());
 		BigInteger fileCount = BigInteger.valueOf(files.size());
 
-		Collection<List<SingleFile>> filesByFileKey = BucketList.create(files, SingleFile::getFileKey).getBuckets();
+		Collection<List<UniquelyNamedFile>> filesByFileKey = BucketList.create(files, UniquelyNamedFile::getFileKey).getBuckets();
 		BigInteger duplicateCount = BigInteger.valueOf(filesByFileKey.size() - 1);
 
 		totalGroupCount = totalGroupCount.add(BigInteger.ONE);

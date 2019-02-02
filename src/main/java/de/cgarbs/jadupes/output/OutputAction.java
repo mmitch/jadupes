@@ -6,7 +6,7 @@ package de.cgarbs.jadupes.output;
 
 import java.util.List;
 
-import de.cgarbs.jadupes.data.SingleFile;
+import de.cgarbs.jadupes.data.UniquelyNamedFile;
 
 /**
  * An Action that acts on the final groups of duplicate files.
@@ -22,7 +22,7 @@ public interface OutputAction
 	 * @param files
 	 *            the files in the group
 	 */
-	public void processGroup(List<SingleFile> files);
+	public void processGroup(List<UniquelyNamedFile> files);
 
 	/**
 	 * finalizes the output after all groups have been processed

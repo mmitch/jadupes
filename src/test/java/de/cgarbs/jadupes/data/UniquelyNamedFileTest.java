@@ -21,7 +21,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 
 @SuppressWarnings("javadoc")
-public class SingleFileTest
+public class UniquelyNamedFileTest
 {
 	@Rule
 	public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -44,7 +44,7 @@ public class SingleFileTest
 		Path somePath = createFileWithContent(tempDir, "filename", "FOO");
 
 		// when
-		SingleFile scannedFile = SingleFile.of(somePath);
+		UniquelyNamedFile scannedFile = UniquelyNamedFile.of(somePath);
 
 		// then
 		assertThat(scannedFile.getName(), is(somePath));
@@ -57,7 +57,7 @@ public class SingleFileTest
 		Path file = createFileWithContent(tempDir, "file", "some content");
 
 		// when
-		SingleFile scannedFile = SingleFile.of(file);
+		UniquelyNamedFile scannedFile = UniquelyNamedFile.of(file);
 
 		// then
 		assertThat(scannedFile.getSize(), is(Files.size(file)));
@@ -71,7 +71,7 @@ public class SingleFileTest
 
 		// when
 		exception.expect(RuntimeException.class);
-		SingleFile.of(madeUpFilename);
+		UniquelyNamedFile.of(madeUpFilename);
 
 		// then
 		fail("no exception thrown!");
@@ -84,8 +84,8 @@ public class SingleFileTest
 		Path file1 = createFileWithContent(tempDir, "file1", "FOO");
 		Path file2 = createFileWithContent(tempDir, "file2", "BAR");
 
-		SingleFile scannedFile1 = SingleFile.of(file1);
-		SingleFile scannedFile2 = SingleFile.of(file2);
+		UniquelyNamedFile scannedFile1 = UniquelyNamedFile.of(file1);
+		UniquelyNamedFile scannedFile2 = UniquelyNamedFile.of(file2);
 
 		// when
 		Object fileKey1 = scannedFile1.getFileKey();
@@ -102,8 +102,8 @@ public class SingleFileTest
 		Path file1 = createFileWithContent(tempDir, "file1", "FOO");
 		Path file2 = Files.createLink(tempDir.resolve("file2"), file1);
 
-		SingleFile scannedFile1 = SingleFile.of(file1);
-		SingleFile scannedFile2 = SingleFile.of(file2);
+		UniquelyNamedFile scannedFile1 = UniquelyNamedFile.of(file1);
+		UniquelyNamedFile scannedFile2 = UniquelyNamedFile.of(file2);
 
 		// when
 		Object fileKey1 = scannedFile1.getFileKey();
@@ -120,7 +120,7 @@ public class SingleFileTest
 		Path file = createFileWithContent(tempDir, "file", "FOO");
 
 		// then
-		SingleFile scannedFile = SingleFile.of(file);
+		UniquelyNamedFile scannedFile = UniquelyNamedFile.of(file);
 
 		// then
 		assertThat(scannedFile.getHardlinkCount(), is(1));
@@ -134,7 +134,7 @@ public class SingleFileTest
 		Files.createLink(tempDir.resolve("hardlink"), file);
 
 		// then
-		SingleFile scannedFile = SingleFile.of(file);
+		UniquelyNamedFile scannedFile = UniquelyNamedFile.of(file);
 
 		// then
 		assertThat(scannedFile.getHardlinkCount(), is(2));
@@ -148,8 +148,8 @@ public class SingleFileTest
 		Path file2 = createFileWithContent(tempDir, "file2", "FOO");
 
 		// then
-		SingleFile scannedFile1 = SingleFile.of(file1);
-		SingleFile scannedFile2 = SingleFile.of(file2);
+		UniquelyNamedFile scannedFile1 = UniquelyNamedFile.of(file1);
+		UniquelyNamedFile scannedFile2 = UniquelyNamedFile.of(file2);
 
 		// then
 		assertThat(scannedFile1.getDevice(), is(scannedFile2.getDevice()));

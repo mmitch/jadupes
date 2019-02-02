@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import de.cgarbs.jadupes.data.Directory;
-import de.cgarbs.jadupes.data.SingleFile;
+import de.cgarbs.jadupes.data.UniquelyNamedFile;
 
 /**
  * Scans directories recursively for regular files
@@ -22,7 +22,7 @@ import de.cgarbs.jadupes.data.SingleFile;
  */
 public class RegularFileScanner
 {
-	private final List<SingleFile> scannedFiles = new ArrayList<>();
+	private final List<UniquelyNamedFile> scannedFiles = new ArrayList<>();
 
 	/**
 	 * scan the given directory for regular files
@@ -37,7 +37,7 @@ public class RegularFileScanner
 			Path startPath = dir.asPath();
 			Files.walk(startPath) //
 					.filter(Files::isRegularFile) //
-					.map(SingleFile::of) //
+					.map(UniquelyNamedFile::of) //
 					.forEach(scannedFiles::add);
 		} catch (IOException e)
 		{
@@ -52,7 +52,7 @@ public class RegularFileScanner
 	 * @return the scanned files
 	 * @see #scan
 	 */
-	public Stream<SingleFile> getScannedFiles()
+	public Stream<UniquelyNamedFile> getScannedFiles()
 	{
 		return scannedFiles.stream();
 	}

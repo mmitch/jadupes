@@ -12,36 +12,37 @@ import java.util.Map;
 import de.cgarbs.jadupes.test.VisibleForTesting;
 
 /**
- * a file with a single filename
+ * a file with a single filename/hardlink
  * 
  * @author Christian Garbs &lt;mitch@cgarbs.de&gt;
  *
  */
-public class SingleFile extends FileBase
+public class UniquelyNamedFile extends FileBase
 {
 	private final Path path;
 
 	@VisibleForTesting
-	protected SingleFile(Path path, long size, Object fileKey)
+	protected UniquelyNamedFile(Path path, long size, Object fileKey)
 	{
 		this(path, size, fileKey, 1, 0);
 	}
 
-	private SingleFile(Path path, long size, Object fileKey, int nlink, long device)
+	private UniquelyNamedFile(Path path, long size, Object fileKey, int nlink, long device)
 	{
 		super(size, fileKey, nlink, device);
 		this.path = path;
 	}
 
 	/**
-	 * Creates a new {@link SingleFile}. Reads and stores the relevant file
+	 * Creates a new {@link UniquelyNamedFile}. Reads and stores the relevant
+	 * file
 	 * attributes from the filesystem.
 	 * 
 	 * @param path
 	 *            the Path of the file (directory + filename)
-	 * @return the new {@link SingleFile}
+	 * @return the new {@link UniquelyNamedFile}
 	 */
-	public static SingleFile of(Path path)
+	public static UniquelyNamedFile of(Path path)
 	{
 		try
 		{
@@ -55,7 +56,7 @@ public class SingleFile extends FileBase
 			int nlink = Integer.parseInt(attributes.get("nlink").toString());
 			long device = Long.parseLong(attributes.get("dev").toString());
 
-			return new SingleFile(path, size, fileKey, nlink, device);
+			return new UniquelyNamedFile(path, size, fileKey, nlink, device);
 		} catch (IOException e)
 		{
 			// Rethrow as unchecked exception because of Stream
