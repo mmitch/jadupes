@@ -7,7 +7,7 @@ package de.cgarbs.jadupes.data;
 import java.nio.file.attribute.BasicFileAttributes;
 
 /**
- * a file
+ * base class for files, contains common attributes
  * 
  * @author Christian Garbs &lt;mitch@cgarbs.de&gt;
  *

@@ -49,7 +49,7 @@ public class UniquelyNamedFile extends FileBase
 			// TODO: figure out what happens when unix: is not available and
 			// what to do then. Perhaps check once on startup if unix: is
 			// available and then always do this or that (perhaps use
-			// SingleFile subclasses?)
+			// subclasses?)
 			Map<String, Object> attributes = Files.readAttributes(path, "unix:size,fileKey,nlink,dev");
 			long size = Long.parseLong(attributes.get("size").toString());
 			Object fileKey = attributes.get("fileKey");
