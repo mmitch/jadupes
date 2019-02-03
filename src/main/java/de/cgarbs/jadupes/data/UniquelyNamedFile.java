@@ -19,27 +19,26 @@ import de.cgarbs.jadupes.test.VisibleForTesting;
  */
 public class UniquelyNamedFile extends FileBase
 {
-	private final Path path;
+	private final Path name;
 
 	@VisibleForTesting
-	protected UniquelyNamedFile(Path path, long size, Object fileKey)
+	protected UniquelyNamedFile(Path name, long size, Object fileKey)
 	{
-		this(path, size, fileKey, 1, 0);
+		this(name, size, fileKey, 1, 0);
 	}
 
-	private UniquelyNamedFile(Path path, long size, Object fileKey, int nlink, long device)
+	private UniquelyNamedFile(Path name, long size, Object fileKey, int nlink, long device)
 	{
 		super(size, fileKey, nlink, device);
-		this.path = path;
+		this.name = name;
 	}
 
 	/**
 	 * Creates a new {@link UniquelyNamedFile}. Reads and stores the relevant
-	 * file
-	 * attributes from the filesystem.
+	 * file attributes from the filesystem.
 	 * 
 	 * @param path
-	 *            the Path of the file (directory + filename)
+	 *            the Path (name) of the file (directory + filename)
 	 * @return the new {@link UniquelyNamedFile}
 	 */
 	public static UniquelyNamedFile of(Path path)
@@ -70,6 +69,6 @@ public class UniquelyNamedFile extends FileBase
 	 */
 	public Path getName()
 	{
-		return path;
+		return name;
 	}
 }

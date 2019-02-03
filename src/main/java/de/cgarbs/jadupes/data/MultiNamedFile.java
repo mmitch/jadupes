@@ -20,18 +20,18 @@ import java.util.stream.Stream;
  */
 public class MultiNamedFile extends FileBase
 {
-	private final List<Path> hardlinks = new ArrayList<>();
+	private final List<Path> names = new ArrayList<>();
 
-	private MultiNamedFile(Path path, long size, Object fileKey, int nlink, long device)
+	private MultiNamedFile(Path name, long size, Object fileKey, int nlink, long device)
 	{
 		super(size, fileKey, nlink, device);
-		hardlinks.add(path);
+		names.add(name);
 	}
 
-	private MultiNamedFile(List<Path> paths, long size, Object fileKey, int nlink, long device)
+	private MultiNamedFile(List<Path> names, long size, Object fileKey, int nlink, long device)
 	{
 		super(size, fileKey, nlink, device);
-		hardlinks.addAll(paths);
+		this.names.addAll(names);
 	}
 
 	/**
@@ -71,8 +71,8 @@ public class MultiNamedFile extends FileBase
 		assert (multiNamedFileA.getHardlinkCount() == multiNamedFileB.getHardlinkCount());
 		assert (multiNamedFileA.getDevice() == multiNamedFileB.getDevice());
 
-		List<Path> combinedPaths = Stream.concat(multiNamedFileA.getNames(), multiNamedFileB.getNames()).collect(toList());
-		return new MultiNamedFile(combinedPaths, multiNamedFileA.getSize(), multiNamedFileA.getFileKey(), multiNamedFileA.getHardlinkCount(), multiNamedFileA.getDevice());
+		List<Path> combinedNames = Stream.concat(multiNamedFileA.getNames(), multiNamedFileB.getNames()).collect(toList());
+		return new MultiNamedFile(combinedNames, multiNamedFileA.getSize(), multiNamedFileA.getFileKey(), multiNamedFileA.getHardlinkCount(), multiNamedFileA.getDevice());
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class MultiNamedFile extends FileBase
 	 */
 	public Stream<Path> getNames()
 	{
-		return hardlinks.stream();
+		return names.stream();
 	}
 
 }
