@@ -6,12 +6,10 @@ package de.cgarbs.jadupes.data;
 
 import static de.cgarbs.jadupes.test.FileHelper.createFileWithContent;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.junit.Before;
@@ -51,19 +49,6 @@ public class UniquelyNamedFileTest
 	}
 
 	@Test
-	public void filesizeIsReturned() throws IOException
-	{
-		// given
-		Path file = createFileWithContent(tempDir, "file", "some content");
-
-		// when
-		UniquelyNamedFile scannedFile = UniquelyNamedFile.of(file);
-
-		// then
-		assertThat(scannedFile.getSize(), is(Files.size(file)));
-	}
-
-	@Test
 	public void scanningNonExistingFileThrowsRuntimeException()
 	{
 		// given
@@ -76,83 +61,4 @@ public class UniquelyNamedFileTest
 		// then
 		fail("no exception thrown!");
 	}
-
-	@Test
-	public void filesWithSameContentYieldDifferentFileKey() throws IOException
-	{
-		// given
-		Path file1 = createFileWithContent(tempDir, "file1", "FOO");
-		Path file2 = createFileWithContent(tempDir, "file2", "BAR");
-
-		UniquelyNamedFile scannedFile1 = UniquelyNamedFile.of(file1);
-		UniquelyNamedFile scannedFile2 = UniquelyNamedFile.of(file2);
-
-		// when
-		Object fileKey1 = scannedFile1.getFileKey();
-		Object fileKey2 = scannedFile2.getFileKey();
-
-		// then
-		assertThat(fileKey1, not(fileKey2));
-	}
-
-	@Test
-	public void hardlinkedFilesYieldDifferentFileKey() throws IOException
-	{
-		// given
-		Path file1 = createFileWithContent(tempDir, "file1", "FOO");
-		Path file2 = Files.createLink(tempDir.resolve("file2"), file1);
-
-		UniquelyNamedFile scannedFile1 = UniquelyNamedFile.of(file1);
-		UniquelyNamedFile scannedFile2 = UniquelyNamedFile.of(file2);
-
-		// when
-		Object fileKey1 = scannedFile1.getFileKey();
-		Object fileKey2 = scannedFile2.getFileKey();
-
-		// then
-		assertThat(fileKey1, is(fileKey2));
-	}
-
-	@Test
-	public void newFileLinkCountIsOne() throws IOException
-	{
-		// given
-		Path file = createFileWithContent(tempDir, "file", "FOO");
-
-		// then
-		UniquelyNamedFile scannedFile = UniquelyNamedFile.of(file);
-
-		// then
-		assertThat(scannedFile.getHardlinkCount(), is(1));
-	}
-
-	@Test
-	public void hardlinkedFileLinkCountIsTwo() throws IOException
-	{
-		// given
-		Path file = createFileWithContent(tempDir, "file", "FOO");
-		Files.createLink(tempDir.resolve("hardlink"), file);
-
-		// then
-		UniquelyNamedFile scannedFile = UniquelyNamedFile.of(file);
-
-		// then
-		assertThat(scannedFile.getHardlinkCount(), is(2));
-	}
-
-	@Test
-	public void twoNewFilesInTheSameDirectoryAreOnTheSameDevice() throws IOException
-	{
-		// given
-		Path file1 = createFileWithContent(tempDir, "file1", "FOO");
-		Path file2 = createFileWithContent(tempDir, "file2", "FOO");
-
-		// then
-		UniquelyNamedFile scannedFile1 = UniquelyNamedFile.of(file1);
-		UniquelyNamedFile scannedFile2 = UniquelyNamedFile.of(file2);
-
-		// then
-		assertThat(scannedFile1.getDevice(), is(scannedFile2.getDevice()));
-	}
-
 }

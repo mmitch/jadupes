@@ -18,20 +18,21 @@ import java.util.stream.Stream;
  * @author Christian Garbs &lt;mitch@cgarbs.de&gt;
  *
  */
-public class MultiNamedFile extends FileBase
+public class MultiNamedFile
 {
 	private final List<Path> names = new ArrayList<>();
+	private final StoredData data;
 
-	private MultiNamedFile(Path name, long size, Object fileKey, int nlink, long device)
+	private MultiNamedFile(Path name, StoredData data)
 	{
-		super(size, fileKey, nlink, device);
-		names.add(name);
+		this.names.add(name);
+		this.data = data;
 	}
 
-	private MultiNamedFile(List<Path> names, long size, Object fileKey, int nlink, long device)
+	private MultiNamedFile(List<Path> names, StoredData data)
 	{
-		super(size, fileKey, nlink, device);
 		this.names.addAll(names);
+		this.data = data;
 	}
 
 	/**
@@ -47,10 +48,7 @@ public class MultiNamedFile extends FileBase
 	{
 		return new MultiNamedFile( //
 				uniquelyNamedFile.getName(), //
-				uniquelyNamedFile.getSize(), //
-				uniquelyNamedFile.getFileKey(), //
-				uniquelyNamedFile.getHardlinkCount(), //
-				uniquelyNamedFile.getDevice());
+				uniquelyNamedFile.getData());
 	}
 
 	/**
@@ -66,19 +64,16 @@ public class MultiNamedFile extends FileBase
 	 */
 	public static MultiNamedFile merge(MultiNamedFile multiNamedFileA, MultiNamedFile multiNamedFileB)
 	{
-		assert (multiNamedFileA.getSize() == multiNamedFileB.getSize());
-		assert (multiNamedFileA.getFileKey().equals(multiNamedFileB.getFileKey()));
-		assert (multiNamedFileA.getHardlinkCount() == multiNamedFileB.getHardlinkCount());
-		assert (multiNamedFileA.getDevice() == multiNamedFileB.getDevice());
+		assert (multiNamedFileA.data.equals(multiNamedFileB.data));
 
 		List<Path> combinedNames = Stream.concat(multiNamedFileA.getNames(), multiNamedFileB.getNames()).collect(toList());
-		return new MultiNamedFile(combinedNames, multiNamedFileA.getSize(), multiNamedFileA.getFileKey(), multiNamedFileA.getHardlinkCount(), multiNamedFileA.getDevice());
+		return new MultiNamedFile(combinedNames, multiNamedFileA.data);
 	}
 
 	/**
 	 * A file with multiple hardlinks has multiple names.
 	 * Only the names from scanned directories are known, so {@link #getNames()}
-	 * might contain fewer results than {@link #getHardlinkCount()}.
+	 * might contain fewer results than {@link StoredData#getHardlinkCount()}.
 	 * 
 	 * @return the known names of this file (directory + filename)
 	 */

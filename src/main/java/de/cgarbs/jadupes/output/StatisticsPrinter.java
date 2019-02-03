@@ -34,10 +34,10 @@ public class StatisticsPrinter implements OutputAction
 	public void processGroup(List<UniquelyNamedFile> files)
 	{
 		// all files of a group have the same size
-		BigInteger fileSize = BigInteger.valueOf(files.get(0).getSize());
+		BigInteger fileSize = BigInteger.valueOf(files.get(0).getData().getSize());
 		BigInteger fileCount = BigInteger.valueOf(files.size());
 
-		Collection<List<UniquelyNamedFile>> filesByFileKey = BucketList.create(files, UniquelyNamedFile::getFileKey).getBuckets();
+		Collection<List<UniquelyNamedFile>> filesByFileKey = BucketList.create(files, file -> file.getData().getFileKey()).getBuckets();
 		BigInteger duplicateCount = BigInteger.valueOf(filesByFileKey.size() - 1);
 
 		totalGroupCount = totalGroupCount.add(BigInteger.ONE);

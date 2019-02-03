@@ -17,9 +17,10 @@ import de.cgarbs.jadupes.test.VisibleForTesting;
  * @author Christian Garbs &lt;mitch@cgarbs.de&gt;
  *
  */
-public class UniquelyNamedFile extends FileBase
+public class UniquelyNamedFile
 {
 	private final Path name;
+	private final StoredData data;
 
 	@VisibleForTesting
 	protected UniquelyNamedFile(Path name, long size, Object fileKey)
@@ -29,8 +30,8 @@ public class UniquelyNamedFile extends FileBase
 
 	private UniquelyNamedFile(Path name, long size, Object fileKey, int nlink, long device)
 	{
-		super(size, fileKey, nlink, device);
 		this.name = name;
+		this.data = new StoredData(size, fileKey, nlink, device);
 	}
 
 	/**
@@ -70,5 +71,15 @@ public class UniquelyNamedFile extends FileBase
 	public Path getName()
 	{
 		return name;
+	}
+
+	/**
+	 * @return the data referred to by this filename
+	 * 
+	 *         FIXME: Law of Demeter
+	 */
+	public StoredData getData()
+	{
+		return data;
 	}
 }

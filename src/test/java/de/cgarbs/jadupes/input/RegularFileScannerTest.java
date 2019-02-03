@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import de.cgarbs.jadupes.data.Directory;
+import de.cgarbs.jadupes.data.StoredData;
 import de.cgarbs.jadupes.data.UniquelyNamedFile;
 
 @SuppressWarnings("javadoc")
@@ -148,7 +149,8 @@ public class RegularFileScannerTest
 	private static void assertSameFiles(List<UniquelyNamedFile> fileList1, Path... fileList2)
 	{
 		Object[] fileKeys1 = fileList1.stream() //
-				.map(UniquelyNamedFile::getFileKey) //
+				.map(UniquelyNamedFile::getData) //
+				.map(StoredData::getFileKey) //
 				.toArray();
 
 		Object[] fileKeys2 = Arrays.stream(fileList2) //
@@ -160,7 +162,7 @@ public class RegularFileScannerTest
 
 	private static void assertSameFile(UniquelyNamedFile file1, Path file2) throws IOException
 	{
-		assertThat(file1.getFileKey(), is(getFileKey(file2)));
+		assertThat(file1.getData().getFileKey(), is(getFileKey(file2)));
 	}
 
 	private static Object getFileKey(Path file)
