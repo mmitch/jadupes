@@ -1,24 +1,46 @@
 defaultTasks 'check'
 
-/* require Java 8 */
-apply plugin: 'java'
-sourceCompatibility = '1.8'
-
-/* generate Java code coverage reports */
-apply plugin: 'jacoco'
-jacocoTestReport {
-    reports {
-        xml.enabled true
-        html.enabled true
-    }
+subprojects {
+	/* require Java 8 */
+	apply plugin: 'java'
+	sourceCompatibility = '1.8'
+	
+	/* additional Eclipse goodness */
+	apply plugin: 'eclipse'
+	eclipse {
+		classpath {
+			downloadJavadoc = true
+			downloadSources = true
+		}
+	}
+	
+	/* generate Java code coverage reports */
+	apply plugin: 'jacoco'
+	jacocoTestReport {
+	    reports {
+	        xml.enabled true
+	        html.enabled true
+	    }
+	}
+	
+	/* mutation testing
+	   see: https://pitest.org https://gradle-pitest-plugin.solidsoft.info */
+	apply plugin: 'info.solidsoft.pitest'
+	pitest {
+		targetClasses = ['de.cgarbs.jadupes.*']
+	}
+	
+	repositories {
+	    mavenCentral()
+	}
+	
+	dependencies {
+	    testCompile 'junit:junit:4.12'
+	    testCompile 'org.hamcrest:hamcrest-all:1.3' // TODO: remove?
+	    testCompile 'org.assertj:assertj-core:3.12.2'
+	}
 }
 
-/* mutation testing
-   see: https://pitest.org https://gradle-pitest-plugin.solidsoft.info */
-apply plugin: 'info.solidsoft.pitest'
-pitest {
-	targetClasses = ['de.cgarbs.jadupes.*']
-}
 buildscript {
 	repositories {
 		mavenCentral()
@@ -26,14 +48,4 @@ buildscript {
 	dependencies {
 		classpath group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: '1.1.11'
 	}
-}
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
- 	compile 'net.openhft:zero-allocation-hashing:0.8'
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.hamcrest:hamcrest-all:1.3'
 }

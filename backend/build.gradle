@@ -1,0 +1,4 @@
+dependencies {
+    compile 'net.openhft:zero-allocation-hashing:0.8'
+    compile project(':contract')
+}
