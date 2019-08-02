@@ -2,7 +2,7 @@ language: java
 
 # Java 8 is required
 jdk:
-  - oraclejdk8
+  - openjdk8
 
 # Codecov.io test coverage report
 # see https://github.com/codecov/example-java
